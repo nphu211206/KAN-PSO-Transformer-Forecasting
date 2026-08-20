@@ -1,0 +1,8 @@
+# Recorded Kaggle environment for the modern experiments.
+# CUDA wheels may require the PyTorch CUDA index on the execution machine.
+numpy==2.0.2
+pandas==2.3.3
+scikit-learn==1.6.1
+torch==2.10.0+cu128
+transformers==5.0.0
+-e ./efficient-kan

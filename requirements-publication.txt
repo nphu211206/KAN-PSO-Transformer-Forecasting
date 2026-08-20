@@ -1,0 +1,12 @@
+# Post-experiment analysis, publication figures, and DOCX validation only.
+# This environment must not be used to rerun or alter frozen K01-K09 evidence.
+numpy>=2.0,<3
+pandas>=2.2,<3
+scipy>=1.13,<2
+matplotlib>=3.9,<4
+seaborn>=0.13,<1
+statsmodels>=0.14,<1
+pillow>=10,<12
+python-docx>=1.1,<2
+lxml>=5,<7
+openpyxl>=3.1,<4
