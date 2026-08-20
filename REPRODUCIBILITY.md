@@ -4,6 +4,10 @@ This package reproduces the frozen evidence and derived publication artifacts.
 The JSON records are authoritative; CSV, Markdown tables and figures are
 derived outputs.
 
+**Source repository:** https://github.com/nphu211206/kan-grid-update-reliability  
+**Archival DOI:** [ZENODO_DOI] — to be inserted after Zenodo deposit  
+**Release tag:** v1.0.0
+
 ## Environment recorded by canonical runs
 
 - Python 3.12.13

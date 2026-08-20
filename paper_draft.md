@@ -901,16 +901,22 @@ The ETTh1 and ETTh2 data are public components of the Electricity Transformer
 Temperature benchmark distributed with the Informer repository [3]. The exact
 dataset files used in this study are identified by SHA-256 hashes in the
 experiment registry and reproducibility manifest. No private or proprietary
-data were used. The final persistent dataset/repository links must be inserted
-before submission.
+data were used.
 
 ### Code availability
 
-The analysis, evidence-audit, experiment and table-generation code is included
-in the accompanying reproducibility package. Each frozen result record stores
-its source hash and protocol identifier. The public repository URL and archival
-DOI will be inserted after the final GitHub and Zenodo release has passed the
-project hash audit.
+- Project name: kan-grid-update-reliability
+- Project home page: https://github.com/nphu211206/kan-grid-update-reliability
+- Archived version: [ZENODO_DOI] (Zenodo DOI — to be inserted after deposit)
+- Operating system: Platform independent (tested on Windows 11 and Kaggle Linux)
+- Programming language: Python 3.10–3.12
+- Other requirements: See `requirements-canonical.txt` and `requirements-publication.txt`
+- License: MIT License (project-owned code); efficient-kan: upstream MIT;
+  ETTDataset: CC BY-ND 4.0 (raw data not redistributed)
+- Any restrictions to use by non-academics: None
+
+Each frozen result record stores its source hash and protocol identifier. The
+archival Zenodo DOI will be inserted after the deposit passes the project hash audit.
 
 ### Competing interests
 
