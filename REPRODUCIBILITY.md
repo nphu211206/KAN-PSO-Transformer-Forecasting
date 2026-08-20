@@ -5,7 +5,7 @@ The JSON records are authoritative; CSV, Markdown tables and figures are
 derived outputs.
 
 **Source repository:** https://github.com/nphu211206/kan-grid-update-reliability  
-**Archival DOI:** [ZENODO_DOI] — to be inserted after Zenodo deposit  
+**Archival DOI:** https://doi.org/10.5281/zenodo.22021428  
 **Release tag:** v1.0.0
 
 ## Environment recorded by canonical runs

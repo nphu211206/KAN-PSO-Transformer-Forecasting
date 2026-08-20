@@ -907,7 +907,7 @@ data were used.
 
 - Project name: kan-grid-update-reliability
 - Project home page: https://github.com/nphu211206/kan-grid-update-reliability
-- Archived version: [ZENODO_DOI] (Zenodo DOI — to be inserted after deposit)
+- Archived version: https://doi.org/10.5281/zenodo.22021428 (Zenodo DOI — to be inserted after deposit)
 - Operating system: Platform independent (tested on Windows 11 and Kaggle Linux)
 - Programming language: Python 3.10–3.12
 - Other requirements: See `requirements-canonical.txt` and `requirements-publication.txt`
@@ -916,7 +916,7 @@ data were used.
 - Any restrictions to use by non-academics: None
 
 Each frozen result record stores its source hash and protocol identifier. The
-archival Zenodo DOI will be inserted after the deposit passes the project hash audit.
+archival DOI: https://doi.org/10.5281/zenodo.22021428
 
 ### Competing interests
 

@@ -13,7 +13,7 @@ used.
 **Code availability:**
 - Project name: kan-grid-update-reliability
 - Project home page: https://github.com/nphu211206/kan-grid-update-reliability
-- Archived version: [ZENODO_DOI] (to be inserted after Zenodo deposit)
+- Archived version: https://doi.org/10.5281/zenodo.22021428
 - Operating system: Platform independent (tested on Windows 11, Kaggle Linux)
 - Programming language: Python 3.10–3.12
 - Other requirements: See requirements-canonical.txt and requirements-publication.txt
