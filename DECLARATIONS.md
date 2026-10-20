@@ -1,31 +1,31 @@
-# Submission Declarations
+# Submission Declarations – Journal of Engineering and Applied Science
 
-**Competing interests:** The author declares no competing interests.
+**Manuscript Title:** PSO-TCWavKAN: A Swarm-Optimized Temporal Convolutional Wavelet Kolmogorov-Arnold Network with Multi-Kernel Trend Decomposition and Asymptotic Linear Recovery for Resilient Power Transformer Thermal Dynamics Forecasting  
+**Author:** Nguyen Phu Toan  
+**Affiliation:** Department of Information Technology, Hanoi University of Business and Technology, 29A, Lane 124 Vinh Tuy Street, Vinh Tuy Ward, Hai Ba Trung District, Hanoi, Vietnam  
+**Corresponding Author:** Nguyen Phu Toan (Email: nphu211206@gmail.com | ORCID: 0009-0005-0529-2131)  
 
-**Funding:** The author received no external funding for this research.
+---
 
-**Availability of data and materials:** The ETTh1 and ETTh2 datasets are public
-components of the Electricity Transformer Temperature benchmark distributed with
-the Informer repository. The exact files used in this study are identified by
-SHA-256 hashes in the experiment registry. No private or proprietary data were
-used.
+**Availability of data and materials:** The ETTh1 and ETTh2 benchmark datasets utilized in this investigation are publicly accessible open-source time-series components of the canonical Electricity Transformer Temperature benchmark established by Zhou et al. (Informer repository: https://github.com/zhouhaoyi/ETDataset). No private, proprietary, or confidential data were used in this study.
 
 **Code availability:**
-- Project name: kan-grid-update-reliability
-- Project home page: https://github.com/nphu211206/kan-grid-update-reliability
-- Archived version: https://doi.org/10.5281/zenodo.22021428
-- Operating system: Platform independent (tested on Windows 11, Kaggle Linux)
-- Programming language: Python 3.10–3.12
-- Other requirements: See requirements-canonical.txt and requirements-publication.txt
-- License: MIT License (project code); efficient-kan: upstream MIT; ETTDataset: CC BY-ND 4.0
-- Any restrictions to use by non-academics: None
+- **Project Name:** KAN-PSO-Transformer-Forecasting (PSO-TCWavKAN v9.1)
+- **Project Home Page:** https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting
+- **Operating System:** Platform independent (verified on Windows 11 and Linux Ubuntu via Kaggle Cloud / NVIDIA Tesla T4 GPU)
+- **Programming Language:** Python 3.10 – 3.13
+- **Primary Dependencies:** PyTorch >= 2.0.0, NumPy, SciPy, Scikit-learn, Pandas, Matplotlib, python-docx
+- **License:** MIT License for proposed model architecture and benchmark code
+- **Restrictions on Use:** None (fully open for academic and commercial research)
 
-**Ethics approval and consent to participate:** Not applicable. The study uses
-public machine-learning benchmark data and involves no human participants or animals.
+**Competing interests:** The author declares that there are no financial, professional, personal, or non-financial competing interests directly or indirectly related to the work submitted for publication.
 
-**Consent for publication:** Not applicable.
+**Funding:** The author received no specific grant or external financial support from any funding agency in the public, commercial, or not-for-profit sectors for this research.
 
-**Author contributions:** Nguyen Phu Toan: conceptualization, methodology,
-software, validation, formal analysis, investigation, data curation,
-visualization, writing—original draft, writing—review and editing, project
-administration and supervision. The author read and approved the final manuscript.
+**Authors' contributions:** Nguyen Phu Toan (NPT): conceptualization, mathematical formulation, software implementation, experiment execution, formal analysis, validation, data curation, visualization, writing – original draft preparation, writing – review and editing, and project administration. The author read and approved the final manuscript.
+
+**Acknowledgements:** Computational resources for executing the extensive 16-configuration benchmark campaigns, systematic 80-cell ablation studies, and noise perturbation evaluations were provided by the Kaggle Cloud GPU environment (NVIDIA Tesla T4 GPU accelerator).
+
+**Ethics approval and consent to participate:** Not applicable. This study utilizes strictly open-source physical sensor telemetry datasets and involves no human participants, tissue samples, or animal experiments.
+
+**Consent for publication:** Not applicable. The manuscript contains no individual person's personal identifying data, images, or details in any form.
