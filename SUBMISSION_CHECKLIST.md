@@ -1,6 +1,6 @@
-# JEAS Submission Checklist
+# Electrical Engineering Submission Checklist
 
-- [ ] Confirm the current JEAS article type and portal fields immediately before submission. Archived official pages verify no author-payable APC and no stated word/figure cap, but policies may change.
+- [ ] Confirm the current Electrical Engineering article type and portal fields immediately before submission. Archived official pages verify no author-payable APC and no stated word/figure cap, but policies may change.
 - [x] Insert the verified sole-author identity, affiliation, corresponding email,
   ORCID and CRediT roles supplied by Nguyen Phu Toan.
 - [ ] Add final repository/DOI links after GitHub and Zenodo publication. Archived official policy specifies single-blind review.
@@ -16,7 +16,7 @@
 - [x] Run `python audit_evidence.py` and retain the passing output.
 - [x] Add `audit_manuscript.py` for frozen numbers, references and forbidden claims.
 - [x] Confirm that pilot and canonical results are never pooled in claims.
-- [x] Check figure first-mention order, title length and PNG size against the archived JEAS guideline.
+- [x] Check figure first-mention order, title length and PNG size against the archived Electrical Engineering guideline.
 - [x] Include abbreviation list, exact Declarations headings and LLM-use disclosure required by the archived guideline.
 - [x] Check all twelve figures at 300-dpi metadata and verify accessible DOCX descriptions.
 - [x] Verify manuscript tables are editable Word table objects.

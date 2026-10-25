@@ -5,7 +5,7 @@
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![PyTorch 2.0+](https://img.shields.io/badge/PyTorch-2.0+-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![Target Journal](https://img.shields.io/badge/Journal-JEAS%20(SpringerOpen)-004D80?style=for-the-badge)](https://jeas.springeropen.com/)
+[![Target Journal](https://img.shields.io/badge/Journal-Electrical Engineering%20(SpringerOpen)-004D80?style=for-the-badge)](https://link.springer.com/journal/202/)
 [![Indexing](https://img.shields.io/badge/Scopus-Q2%20%7C%20EI%20Compendex-F96302?style=for-the-badge)](https://www.scopus.com/)
 [![Figures Quality](https://img.shields.io/badge/Figures-600%20DPI%20Ultra--HD-blueviolet?style=for-the-badge)](figures/)
 
@@ -284,8 +284,8 @@ If you find this research paper, architectural formulation, or codebase helpful 
 @article{nguyen2026psotcwavkan,
   title={{PSO-TCWavKAN}: A Swarm-Optimized Temporal Convolutional Wavelet Kolmogorov-Arnold Network with Multi-Kernel Trend Decomposition and Asymptotic Linear Recovery for Resilient Power Transformer Thermal Dynamics Forecasting},
   author={Nguyen, Phu Toan},
-  journal={Journal of Engineering and Applied Science},
-  volume={73},
+  journal={Electrical Engineering (Archiv fur Elektrotechnik)},
+  volume={},
   pages={1--22},
   year={2026},
   publisher={SpringerOpen},
@@ -299,4 +299,4 @@ If you find this research paper, architectural formulation, or codebase helpful 
 
 - **License:** This project is licensed under the permissive [MIT License](LICENSE).
 - **Data Acknowledgement:** We express our sincere gratitude to the authors of the **Electricity Transformer Temperature (ETT)** benchmark datasets (Zhou et al., AAAI 2021) for providing the foundational operational telemetry.
-- **Publication Venue:** Targeted for the *Journal of Engineering and Applied Science* (JEAS), published by SpringerOpen and sponsored by Cairo University.
+- **Publication Venue:** Targeted for the *Electrical Engineering (Archiv fur Elektrotechnik)* (Electrical Engineering), published by SpringerOpen and sponsored by Cairo University.

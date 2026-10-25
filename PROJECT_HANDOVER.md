@@ -1,7 +1,7 @@
 # KAN-HPO Time-Series Forecasting: Project Handover
 
 **Updated:** 2026-08-17  
-**Target journal:** Journal of Engineering and Applied Science (JEAS)  
+**Target journal:** Electrical Engineering (Archiv fur Elektrotechnik) (Electrical Engineering)  
 **Current evidence:** 380 frozen experiment records through K10  
 **Current paper:** about 7000 words, 25 references, 12 figures, 9 tables  
 **Primary task:** univariate oil-temperature (`OT`) forecasting on ETTh1/ETTh2
@@ -20,8 +20,8 @@ Read and run in this order:
 3. Read `CLAIM_EVIDENCE_MATRIX.md` before editing any scientific claim.
 4. Read `paper_draft.md` to understand the current narrative.
 5. Read `MASTER_UPGRADE_ROADMAP.md` for all remaining work and priorities.
-6. Read `JEAS_SUBMISSION_REQUIREMENTS.md` and
-   `JEAS_ACCEPTED_ARTICLE_DEEP_AUDIT.md` for venue expectations.
+6. Read `Electrical Engineering_SUBMISSION_REQUIREMENTS.md` and
+   `Electrical Engineering_ACCEPTED_ARTICLE_DEEP_AUDIT.md` for venue expectations.
 7. Run the audits listed in Section 14 using a Python environment with NumPy
    and python-docx where required.
 
@@ -110,7 +110,7 @@ and use K08 only as historical checkpoint-contract sensitivity evidence.
 ### Phase 0: research and feasibility
 
 The project collected literature on KAN, B-splines, metaheuristic optimization,
-ETT forecasting, efficient-kan and JEAS reporting. The original ambition was a
+ETT forecasting, efficient-kan and Electrical Engineering reporting. The original ambition was a
 hybrid KAN-PSO paper with strong model-performance claims.
 
 ### Phase 1: historical HPO
@@ -152,9 +152,9 @@ and five seeds. It applied validation-best selection uniformly and saved JSON,
 predictions, checkpoints, latency and peak-memory artifacts. K09 closed the
 largest fairness and diagnostics gap.
 
-### Phase 7: JEAS packaging
+### Phase 7: Electrical Engineering packaging
 
-Recent accepted JEAS articles and archived official requirements were audited.
+Recent accepted Electrical Engineering articles and archived official requirements were audited.
 The manuscript was rebuilt around reliability, negative results and engineering
 interpretation. It now contains workflow/data figures, baseline and Grid Update
 evidence, prediction/residual/forecast-step plots and compute tables.
@@ -176,7 +176,7 @@ evidence, prediction/residual/forecast-step plots and compute tables.
 
 - Stable public repository and archival DOI.
 - A clean public release separated from unrelated/private workspace files.
-- Live JEAS portal confirmation immediately before upload.
+- Live Electrical Engineering portal confirmation immediately before upload.
 - Visual page-by-page inspection of a fresh PDF export. The prior user PDF was
   rejected because display equations rendered incorrectly; the DOCX is fixed.
 - Portable clean Python environments; legacy `.venv*` directories are
@@ -302,7 +302,7 @@ The twelve manuscript figures are:
 11. `k10_multihorizon_compute.png`
 12. `k10_h720_forecasts.png`
 
-All are approximately 300 dpi and below JEAS's archived 10 MB figure limit.
+All are approximately 300 dpi and below Electrical Engineering's archived 10 MB figure limit.
 Other figures and `*_data.json` are supporting or historical artifacts.
 
 ## 12. Audit, Test and Document-Build Files
@@ -340,15 +340,15 @@ portable Python 3.12 environment instead.
 |---|---|
 | `paper_draft.md` | Canonical manuscript source; current, not an obsolete SOTA draft |
 | `paper_submission.docx` | Current author-neutral formatted submission artifact |
-| `COVER_LETTER.md` | Current JEAS cover-letter draft; author approval pending |
+| `COVER_LETTER.md` | Current Electrical Engineering cover-letter draft; author approval pending |
 | `DECLARATIONS.md` | Standalone declaration draft |
 | `SUBMISSION_CHECKLIST.md` | Submission gates and manual checks |
 | `FINAL_QA_REPORT.md` | Latest passed checks and unresolved renderer limitation |
 | `PUBLICATION_READINESS_AUDIT.md` | Honest readiness verdict and scientific limitations |
-| `JEAS_SUBMISSION_REQUIREMENTS.md` | Archived official requirement extraction; recheck live portal |
-| `JEAS_ACCEPTED_ARTICLE_DEEP_AUDIT.md` | Detailed accepted-paper comparison |
-| `JEAS_FULLTEXT_BENCHMARK.md` | Figure/table/word/reference patterns from full texts |
-| `JEAS_BENCHMARK_AUDIT.md` | Gap matrix against related JEAS papers |
+| `Electrical Engineering_SUBMISSION_REQUIREMENTS.md` | Archived official requirement extraction; recheck live portal |
+| `Electrical Engineering_ACCEPTED_ARTICLE_DEEP_AUDIT.md` | Detailed accepted-paper comparison |
+| `Electrical Engineering_FULLTEXT_BENCHMARK.md` | Figure/table/word/reference patterns from full texts |
+| `Electrical Engineering_BENCHMARK_AUDIT.md` | Gap matrix against related Electrical Engineering papers |
 | `REFERENCE_AUDIT.md` | DOI/reference verification record |
 | `PUBLIC_RELEASE_README.md` | Clean-release staging and exclusion rules |
 | `PUBLIC_RELEASE_MANIFEST.json` | Generated allowlist, sizes and SHA-256 values; not yet a DOI release |
@@ -413,7 +413,7 @@ Follow `MASTER_UPGRADE_ROADMAP.md`. In short:
    their reconstruction validates.
 5. Complete final manuscript language/reference QA.
 6. Obtain author, CRediT, funding and repository information.
-7. Recheck the live JEAS portal.
+7. Recheck the live Electrical Engineering portal.
 8. Fix/use a working DOCX renderer and inspect the final PDF page by page.
 9. Deposit a DOI-bearing release, insert links, rerun audits and submit.
 
@@ -439,7 +439,7 @@ preregistered.
 | Frozen evidence | 380 records; K09 and K10 dedicated audits pass |
 | Manuscript | Author-complete working submission draft; repository URL/DOI pending |
 | Figures/tables | 12 figures and 9 editable tables; structural audit passes |
-| JEAS benchmarking | Complete from archived requirements and accepted papers |
+| Electrical Engineering benchmarking | Complete from archived requirements and accepted papers |
 | Public reproducibility release | Private allowlisted staging v13 assembled and audited with authoritative K10 evidence; GitHub/Zenodo publication pending |
 | Visual PDF QA | Previous user PDF rejected due broken equations; corrected DOCX ready for fresh export and page-by-page inspection |
 | New Kaggle work | Not required for current claims |

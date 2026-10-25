@@ -1,21 +1,21 @@
-# Cover Letter – Journal of Engineering and Applied Science (Springer Nature)
+# Cover Letter – Electrical Engineering (Archiv fur Elektrotechnik) (Springer Nature)
 
 **Date:** October 19, 2026  
-**To:** Editor-in-Chief, *Journal of Engineering and Applied Science* (JEAS)  
+**To:** Editor-in-Chief, *Electrical Engineering (Archiv fur Elektrotechnik)* (Electrical Engineering)  
 
 **Subject:** Submission of Original Research Article titled:  
 **"PSO-TCWavKAN: A Swarm-Optimized Temporal Convolutional Wavelet Kolmogorov-Arnold Network with Multi-Kernel Trend Decomposition and Asymptotic Linear Recovery for Resilient Power Transformer Thermal Dynamics Forecasting"**
 
 Dear Editor-in-Chief,
 
-I am pleased to submit our original research manuscript entitled **"PSO-TCWavKAN: A Swarm-Optimized Temporal Convolutional Wavelet Kolmogorov-Arnold Network with Multi-Kernel Trend Decomposition and Asymptotic Linear Recovery for Resilient Power Transformer Thermal Dynamics Forecasting"** for consideration as a Research Article in the *Journal of Engineering and Applied Science*.
+I am pleased to submit our original research manuscript entitled **"PSO-TCWavKAN: A Swarm-Optimized Temporal Convolutional Wavelet Kolmogorov-Arnold Network with Multi-Kernel Trend Decomposition and Asymptotic Linear Recovery for Resilient Power Transformer Thermal Dynamics Forecasting"** for consideration as a Research Article in the *Electrical Engineering (Archiv fur Elektrotechnik)*.
 
-### Context and Suitability for JEAS
+### Context and Suitability for Electrical Engineering
 Accurate, multi-step-ahead thermal forecasting of high-voltage electrical power transformers is a cornerstone of smart grid condition-based maintenance, dynamic thermal rating (DTR), and catastrophic insulation failure prevention. While Kolmogorov-Arnold Networks (KANs) have recently captured significant attention as an expressive functional approximation paradigm, their direct application to volatile industrial time-series has been impeded by two systemic bottlenecks:
 1. **The Grid Update Dilemma:** Training optimization instability and validation loss spikes caused by discrete B-spline knot reallocation during dynamic grid adaptation;
 2. **The Linear Model Dilemma:** Empirical degradation across extended forecasting horizons (96 to 720 steps) when benchmarked against simple linear baselines (e.g., DLinear).
 
-This investigation directly aligns with the stated scope of the *Journal of Engineering and Applied Science* in electrical engineering, computational intelligence, and industrial optimization, following the rigorous standards demonstrated by recent high-impact publications in JEAS on hybrid neural architectures and swarm metaheuristics (such as ACKLSTM-KAN, PSO-SVR, and PSO-GBM).
+This investigation directly aligns with the stated scope of the *Electrical Engineering (Archiv fur Elektrotechnik)* in electrical engineering, computational intelligence, and industrial optimization, following the rigorous standards demonstrated by recent high-impact publications in Electrical Engineering on hybrid neural architectures and swarm metaheuristics (such as ACKLSTM-KAN, PSO-SVR, and PSO-GBM).
 
 ### Core Scientific and Practical Contributions
 The manuscript delivers a mathematically rigorous, structurally protected, and empirically validated framework:
