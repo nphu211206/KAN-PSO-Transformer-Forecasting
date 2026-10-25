@@ -377,7 +377,7 @@ class Decomp_TCWavKAN_v90(nn.Module):
 
     Mathematical guarantee (Proposition 1):
       When g(x) -> 0: output = y_trend + y_seas_lin = EXACTLY DLinear
-      Therefore: v9.0 cannot underperform DLinear (mathematical lower bound).
+      Proposition 1 (Asymptotic Linear Structural Recovery): As the neural routing gate g(x) -> 0, the architecture recovers the generalized linear projection in the topological closure of the hypothesis space.
 
     Ablation flags:
       use_harmonic_bank : True=K=5 octave bank (default); False=K=1 single freq

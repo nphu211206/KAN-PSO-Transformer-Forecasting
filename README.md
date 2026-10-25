@@ -227,15 +227,12 @@ python pso_tcwavkan_v91.py --help
 If you find this research paper, architectural formulation, or codebase helpful in your work, please cite:
 
 ```bibtex
-@article{nguyen2026psotcwavkan,
-  title={{PSO-TCWavKAN}: A Swarm-Optimized Temporal Convolutional Wavelet Kolmogorov-Arnold Network with Multi-Kernel Trend Decomposition and Asymptotic Linear Recovery for Resilient Power Transformer Thermal Dynamics Forecasting},
+@misc{nguyen2026psotcwavkan,
+  title={{PSO-TCWavKAN}: A Swarm-Optimized Temporal Convolutional Wavelet Kolmogorov-Arnold Network with Multi-Kernel Trend Decomposition and Asymptotic Linear Structural Recovery for Resilient Power Transformer Thermal Dynamics Forecasting},
   author={Nguyen, Phu Toan},
-  journal={Electrical Engineering (Archiv fur Elektrotechnik)},
-  volume={},
-  pages={1--22},
   year={2026},
-  publisher={SpringerOpen},
-  doi={10.1186/s44147-026-00000-0}
+  howpublished={Manuscript submitted to \textit{Electrical Engineering (Archiv f{\"u}r Elektrotechnik)}},
+  note={Preprint / Code Archive: \url{https://doi.org/10.5281/zenodo.23636953}}
 }
 ```
 
@@ -245,4 +242,4 @@ If you find this research paper, architectural formulation, or codebase helpful 
 
 - **License:** This project is licensed under the permissive [MIT License](LICENSE).
 - **Data Acknowledgement:** We express our sincere gratitude to the authors of the **Electricity Transformer Temperature (ETT)** benchmark datasets (Zhou et al., AAAI 2021) for providing the foundational operational telemetry.
-- **Publication Venue:** Targeted for the *Electrical Engineering (Archiv fur Elektrotechnik)* (Electrical Engineering), published by SpringerOpen and sponsored by Cairo University.
+- **Publication Venue:** Submitted to *Electrical Engineering (Archiv für Elektrotechnik)*, Springer Nature.
