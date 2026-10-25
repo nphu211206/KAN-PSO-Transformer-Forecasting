@@ -38,7 +38,7 @@ However, existing deep learning time-series forecasting models exhibit critical 
 
 ![System Architecture](figures/v81_pipeline_schematic.png)
 
-*Fig. 1: End-to-end architectural workflow of the proposed PSO-TCWavKAN v9.1 framework. Raw telemetry passes through Reversible Instance Normalization (RevIN), dual-kernel trend-seasonal moving average decomposition (K_1=25, K_2=49), 1D convolutional patch embedding, the Continuous Dyadic Wavelet KAN block, the parameterized neural routing gate g(x), and the linear lower-bound combination producing denormalized oil temperature predictions with IEC 60076-7 Arrhenius threshold monitoring.*
+*Fig. 1: End-to-end architectural workflow of the proposed PSO-TCWavKAN v9.1 framework. Raw telemetry passes through Reversible Instance Normalization (RevIN), dual-kernel trend-seasonal moving average decomposition (K_1=25, K_2=49), 1D convolutional patch embedding, the Continuous Dyadic Wavelet KAN block, the parameterized neural routing gate g(x), and the asymptotic linear recovery combination producing denormalized oil temperature predictions with IEC 60076-7 Arrhenius threshold monitoring.*
 
 ### Core Methodological Contributions:
 
