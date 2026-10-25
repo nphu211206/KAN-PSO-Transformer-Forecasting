@@ -610,13 +610,16 @@ def clpso_warm_start(ds_name, sl, pl, dev,
 # ═══════════════════════════════════════════════════════════════════════════════
 
 def _val_mse(model, loader, dev):
-    """Validation MSE — uses AMP autocast for speed."""
+    """Validation MSE — sample-weighted across batches for mathematical precision."""
     model.eval()
-    vals = []
+    total_loss, total_count = 0.0, 0
     with torch.no_grad(), _AMP_EVAL():
         for x, y in loader:
-            vals.append(F.mse_loss(model(x.to(dev)), y.to(dev)).item())
-    return float(np.mean(vals)) if vals else 999.0
+            x, y = x.to(dev), y.to(dev)
+            bsz = x.size(0)
+            total_loss += F.mse_loss(model(x), y, reduction='sum').item()
+            total_count += bsz * y.size(1) * y.size(2)
+    return float(total_loss / max(1, total_count)) if total_count > 0 else 999.0
 
 
 def train_eval_master_v90(model, tr, vl, te, dev,
