@@ -686,21 +686,28 @@ def train_eval_master_v90(model, tr, vl, te, dev,
     ])) if len(vl) > 0 else 999.0
 
     eval_m = swa_model if v_swa <= best_v else model
-    if eval_m is model: model.load_state_dict(best_sd)
+    if eval_m is model:
+        model.load_state_dict(best_sd)
+        saved_weights = best_sd
+    else:
+        # swa_model is selected: extract underlying module weights
+        saved_weights = (eval_m.module if hasattr(eval_m, 'module') else eval_m).state_dict()
 
-    if save_checkpoint_path and best_sd is not None:
-        torch.save(best_sd, save_checkpoint_path)
+    if save_checkpoint_path and saved_weights is not None:
+        torch.save(saved_weights, save_checkpoint_path)
 
     eval_m.eval()
-    ms, ma = [], []
+    total_sq_err, total_abs_err, total_elements = 0.0, 0.0, 0
     pred_data = {'y_pred': [], 'y_true': [], 'g_values': []}
 
     with torch.no_grad(), _AMP_EVAL():
         for x, y in te:
             xd = x.to(dev)
             yh = eval_m(xd).cpu().float()  # cast back to float32 for metrics
-            ms.append(F.mse_loss(yh, y).item())
-            ma.append((yh - y).abs().mean().item())
+            n_elem = y.numel()
+            total_sq_err += F.mse_loss(yh, y, reduction='sum').item()
+            total_abs_err += (yh - y).abs().sum().item()
+            total_elements += n_elem
             if save_predictions:
                 pred_data['y_pred'].append(yh.numpy())
                 pred_data['y_true'].append(y.numpy())
@@ -711,7 +718,10 @@ def train_eval_master_v90(model, tr, vl, te, dev,
                     gv = base.get_router_values(x_norm).cpu().float().numpy()
                     pred_data['g_values'].append(gv)
 
-    return float(np.mean(ms)), float(np.mean(ma)), pred_data
+    final_mse = float(total_sq_err / max(1, total_elements))
+    final_mae = float(total_abs_err / max(1, total_elements))
+    return final_mse, final_mae, pred_data
+
 
 
 def train_eval_simple(model, tr, vl, te, dev, epochs=100, patience=15, lr=0.01):
@@ -750,13 +760,18 @@ def train_eval_simple(model, tr, vl, te, dev, epochs=100, patience=15, lr=0.01):
             if stale >= patience: break
     model.load_state_dict(best_sd)
     model.eval()
-    ms, ma = [], []
+    total_sq_err, total_abs_err, total_elements = 0.0, 0.0, 0
     with torch.no_grad(), _AMP_EVAL():
         for x, y in te:
             yh = model(x.to(dev)).cpu().float()
-            ms.append(F.mse_loss(yh, y).item())
-            ma.append((yh - y).abs().mean().item())
-    return float(np.mean(ms)), float(np.mean(ma))
+            n_elem = y.numel()
+            total_sq_err += F.mse_loss(yh, y, reduction='sum').item()
+            total_abs_err += (yh - y).abs().sum().item()
+            total_elements += n_elem
+    final_mse = float(total_sq_err / max(1, total_elements))
+    final_mae = float(total_abs_err / max(1, total_elements))
+    return final_mse, final_mae
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

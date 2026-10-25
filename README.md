@@ -50,7 +50,7 @@ However, existing deep learning time-series forecasting models exhibit critical 
 2. **Asymptotic Linear Recovery Guarantee (Proposition 1):**
    Incorporates an instance-dependent neural routing gate g(x)  (0, 1)^H parameterizing an adaptive combination between the linear projection and the non-linear wavelet pathway:
    [yseas = (1 - g(x))  yseas, linear + g(x)  ywavkan]
-   **Proposition 1:** In the topological closure as g(x)  0, the architecture identically recovers the generalized multi-kernel linear projection model, and recovers canonical DLinear when kernel lengths match (K_1=K_2=25). If non-linear representations do not reduce empirical training loss, the gate attenuates them toward the linear baseline.
+   **Proposition 1:** In the topological closure as g(x)  0, the architecture identically recovers the generalized multi-kernel linear projection model, and recovers canonical DLinear when kernel lengths match (K_1=K_2=25). This establishes representational containment within the hypothesis space without constituting an unconditional guarantee on non-convex gradient optimization trajectories or empirical test-time error.
 
 3. **Constriction-Factor CLPSO Swarm Warm-Start:**
    Deploys Comprehensive Learning Particle Swarm Optimization (= 0.7298, c_1=1.4962) over a fast surrogate landscape prior to gradient descent. This reliably locates the optimal global parameter basin (_0^*, (s)^*, logit\_alpha^*, ^*), preventing the model from becoming trapped in localized wavelet ripple basins.
@@ -59,13 +59,13 @@ However, existing deep learning time-series forecasting models exhibit critical 
    Concurrent moving average kernels decouple the 24-hour daily cycle (K_1=25) and the multi-day seasonal weather shift (K_2=49), isolating pure harmonic residuals for wavelet processing.
 
 5. **Exceptional Operational Noise Resilience:**
-   Demonstrates localized resilience under 30% Gaussian noise injection (= 0.30) with only **+1.4%** error increase on ETTh2 (L=336, H=336), ensuring robust field deployment in harsh electrical substations with electromagnetic interference (EMI).
+   Evaluated under synthetic Gaussian noise perturbations (sigma = 0.30) across four representative operating and stress configurations: degradation is bounded to +1.4% to +13.0% across operational horizons (H <= 336), while exhibiting expected phase dispersion (+139.6%) under long-horizon stress (ETTh1, L=336, H=720).
 
 ---
 
 ## 📊 Comprehensive Empirical Benchmarks
 
-All models were evaluated using the canonical Electricity Transformer Temperature (**ETTh1** and **ETTh2**) benchmarks across four standard forecasting horizons H  \96, 192, 336, 720\ and two lookback windows L  \96, 336\ across 3 independent random seeds (48 total benchmark experiments).
+All models were evaluated using the canonical Electricity Transformer Temperature (**ETTh1** and **ETTh2**) benchmarks across four standard forecasting horizons $H \in \{96, 192, 336, 720\}$ and two lookback windows $L \in \{96, 336\}$ (5 independent random seeds $\{1000, 2000, 3000, 4000, 5000\}$ for DLinear, NLinear, and PSO-TCWavKAN; 3 independent seeds $\{1000, 2000, 3000\}$ for PatchTST Lite).
 
 ### Main Benchmark Matrix (Standardized Test MSE / MAE)
 
@@ -89,7 +89,7 @@ All models were evaluated using the canonical Electricity Transformer Temperatur
 | **ETTh2** | 336 | 720 | **0.4351** / **0.5296** | 0.5014 / 0.5643 | 0.6228 / 0.6379 | 0.6656 / 0.6491 | -52.9% |
 | **Overall Mean** | — | — | **0.2529** / **0.3830** | 0.2648 / 0.3904 | 0.2799 / 0.4010 | **0.2565** / **0.3833** | **+1.4% (Competitive)** |
 
-> **Key Finding on ETTh2 Dominance:** On the volatile, non-stationary **ETTh2** benchmark (characterized by rapid dynamic dispatch transitions), **PSO-TCWavKAN outperforms DLinear, NLinear, and PatchTST Lite in 7 out of 8 horizons**, demonstrating superior non-linear transient modeling capabilities.
+> **Key Finding on ETTh2 Dominance:** On the volatile, non-stationary **ETTh2** benchmark (characterized by rapid dynamic dispatch transitions), **PSO-TCWavKAN outperforms DLinear, NLinear, and PatchTST Lite in 7 out of 8 lookback–horizon configurations**, demonstrating superior non-linear transient modeling capabilities within operational horizons.
 
 ![Multi-Horizon Benchmark Error Trajectories](figures/targeted_baselines_all_horizons.png)
 
@@ -116,7 +116,7 @@ All figures below are generated at **600 DPI publication resolution** and corres
 
 An 80-cell ablation experiment evaluated across 5 structural variants confirms the empirical contribution of each modular component:
 
-| Variant | Architectural Modification | Mean MSE (Standard H  336) | Relative Delta vs. Full | Physical Impact & Interpretation |
+| Variant | Architectural Modification | Mean MSE (Standard H ≤ 336) | Relative Delta vs. Full | Physical Impact & Interpretation |
 |:---|:---|:---:|:---:|:---|
 | **A1: NoHarmonicBank** | Single-frequency WavKAN (K_w = 1, no octave scaling) | 0.21783 | +2.44% | Loss of multi-octave diversity; degrades transient resolution |
 | **A2: NoMultiKernelDecomp** | Single moving average kernel (K = 25 only) | **0.22247** | **+4.62%** | **Most Critical.** Trend leakage corrupts wavelet gradients |
@@ -130,16 +130,16 @@ An 80-cell ablation experiment evaluated across 5 structural variants confirms t
 
 ### Noise Robustness under Progressive Gaussian Perturbation (Table 6)
 
-Sensors and SCADA communication links in high-voltage substations are subject to severe electromagnetic interference (EMI). We injected zero-mean Gaussian noise N(0, ^2) directly into the input telemetry (Seed 42 reference run):
+To assess sensitivity to high-frequency sensor telemetry noise, zero-mean Gaussian noise $\mathcal{N}(0, \sigma^2)$ with $\sigma \in \{0.0, 0.10, 0.20, 0.30\}$ was injected into normalized input test sequences on a dedicated reference checkpoint (Seed 42, pre-SWA):
 
-| Dataset | Lookback (L) | Horizon (H) | Clean (= 0.0) | Low Noise (= 0.10) | Moderate (= 0.20) | Extreme Noise (= 0.30) | Max Degradation () |
+| Dataset | Lookback (L) | Horizon (H) | Clean ($\sigma = 0.0$) | Low Noise ($\sigma = 0.10$) | Moderate ($\sigma = 0.20$) | Extreme Noise ($\sigma = 0.30$) | Max Degradation ($\Delta$) |
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | **ETTh1** | 96 | 96 | 0.1127 | 0.1145 | 0.1192 | 0.1273 | +13.0% |
 | **ETTh1** | 336 | 720 | 0.1817 | 0.2142 | 0.3216 | 0.4354 | +139.6% |
 | **ETTh2** | 96 | 192 | 0.3312 | 0.3334 | 0.3392 | 0.3472 | +4.8% |
-| **ETTh2** | 336 | 336 | 0.3426 | 0.3432 | 0.3437 | 0.3475 | **+1.4% (Ultra-Resilient)** |
+| **ETTh2** | 336 | 336 | 0.3426 | 0.3432 | 0.3437 | 0.3475 | **+1.4% (Bounded)** |
 
-> **Resilience Verdict:** Across localized operational horizons (H  336), error degradation remains strictly bounded between **+1.4% and +13.0%**, demonstrating robust applicability for field substation microcontrollers under active EMI.
+> **Note on Reference Values:** Baseline clean values in Table 6 (e.g. 0.3426 for ETTh2 $L=336, H=336$) correspond to the single reference evaluation checkpoint (Seed 42, pre-SWA) subjected to controlled progressive noise injection, whereas Table 4 reports the multi-seed mean with SWA averaging (0.3162). Percentage degradations are calculated strictly relative to the unperturbed baseline of that specific reference checkpoint.
 
 ### Computational Complexity & Hardware Profiling (Table 7)
 
@@ -147,8 +147,9 @@ Sensors and SCADA communication links in high-voltage substations are subject to
 |:---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **DLinear** | 18,624 (18.6 K) | 485.3 K | 0.42 s | **1.1 ms** | 412 MB | Embedded DSP / MCU |
 | **NLinear** | 9,312 (9.3 K) | 242.6 K | 0.45 s | 1.2 ms | 415 MB | Embedded DSP / MCU |
-| **PatchTST Lite** | 169,570 (169.6 K) | 1,993.8 K | 2.85 s | 8.6 ms | 1,240 MB | Edge GPU Required |
-| **PSO-TCWavKAN v9.1** | **44,841 (44.8 K)** | **796.9 K** | **1.24 s** | **3.4 ms** | **680 MB** | **Substation Gateway / Edge RTU** |
+| **PatchTST Lite** | 169,570 (169.6 K) | 1,993.8 K | 2.85 s | 8.6 ms | 1,240 MB | Cloud / Edge Server |
+| **PSO-TCWavKAN v9.1** | **44,841 (44.8 K)** | **796.9 K** | **1.24 s** | **3.4 ms** | **680 MB** | **Potentially feasible; requires target-hardware validation** |
+
 
 ---
 
@@ -232,7 +233,7 @@ If you find this research paper, architectural formulation, or codebase helpful 
   author={Nguyen, Phu Toan},
   year={2026},
   howpublished={Manuscript submitted to \textit{Electrical Engineering (Archiv f{\"u}r Elektrotechnik)}},
-  note={Preprint / Code Archive: \url{https://doi.org/10.5281/zenodo.23636953}}
+  note={Code and Data Archive: \url{https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting}}
 }
 ```
 
