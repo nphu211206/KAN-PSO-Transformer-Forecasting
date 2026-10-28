@@ -45,17 +45,22 @@ total += 1; score += chk(f"All 33 pages have zero margin overflow (max x1 = {max
 
 # Check Declarations PDF Funding header
 decl_pdf = fitz.open('DECLARATIONS_ELECTRICAL_ENGINEERING.pdf')
-# Find where "Funding" is
+# Find where "Funding" is and ensure its text is with it
 funding_pg = None
 funding_y = None
+funding_text_pg = None
 for pg in range(len(decl_pdf)):
     for b in decl_pdf[pg].get_text('blocks'):
-        if b[4].strip() == 'Funding':
+        txt = b[4].strip()
+        if txt == 'Funding':
             funding_pg = pg + 1
             funding_y = b[1]
+        if 'The author received no external funding' in txt:
+            funding_text_pg = pg + 1
 
-# Funding should be on Page 2 near top (y < 100), not stranded at bottom of Page 1
-total += 1; score += chk(f"Declarations: Funding heading on Page {funding_pg} (y={funding_y:.1f} pt, not orphaned at page bottom)", funding_pg == 2 and funding_y < 100)
+# Funding header and its text must be on the same page (not orphaned)
+funding_not_orphaned = (funding_pg is not None and funding_pg == funding_text_pg)
+total += 1; score += chk(f"Declarations: Funding heading on Page {funding_pg} (together with its text on Page {funding_text_pg}, not orphaned)", funding_not_orphaned)
 
 # Cover Letter page count
 cl_pdf = fitz.open('COVER_LETTER_ELECTRICAL_ENGINEERING.pdf')
