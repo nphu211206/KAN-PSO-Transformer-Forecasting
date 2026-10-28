@@ -116,3 +116,22 @@ bundle and result directory.
 K10 v2 is governed by the original preregistration plus
 `CANONICAL_MULTIHORIZON_BASELINE_PREREGISTRATION_V2.md`. The authoritative ZIP
 passed `audit_k10.py`; all derived tables and figures come from that ZIP.
+
+
+## Campaign K11: PSO-TCWavKAN v9.1 Main Benchmark Campaign (2026-10-25)
+
+- **Campaign ID:** K11_v91_BENCHMARK_FINAL
+- **Preregistration & Protocol:** Canonical 70/10/20 chronological split across 17,420 total hourly observations (ETTh1: 8,545 train/val/test steps; ETTh2: 8,545 steps) from the standard ETT benchmark (`https://github.com/zhouhaoyi/ETDataset`).
+- **Code Artifact:** `github_release/pso_tcwavkan_v91.py` (authoritative release code, platform-independent PyTorch 2.0+).
+- **Execution Platform:** Kaggle Cloud GPU (NVIDIA Tesla T4 GPU accelerator, 16 GB VRAM) executing modular sessions: `SESSION1` (Main Benchmark), `SESSION2A` (Ablations A1-A2), `SESSION2B1/B2/C` (Ablations A3-A5), `SESSION3` (Noise Perturbation Stress Testing).
+- **Random Seed Protocol:**
+  - Proposed model (PSO-TCWavKAN), DLinear, NLinear: evaluated across **5 independent seeds**: `{1000, 2000, 3000, 4000, 5000}`.
+  - PatchTST Lite: evaluated across **3 independent seeds**: `{1000, 2000, 3000}`.
+  - Total primary benchmark evaluations: 16 configs × 4 models × multi-seed = 288 evaluations.
+- **Ablation Campaign:** 5 structural variants (A1: NoHarmonicBank, A2: NoMultiKernelDecomp, A3: NoNeuralRouter, A4: NoCLPSO, A5: Full PSO-TCWavKAN) × 16 lookback–horizon configurations × 3 independent seeds = 240 evaluations.
+- **Noise Robustness Campaign:** Controlled zero-mean Gaussian perturbation $\sigma \in \{0.0, 0.1, 0.2, 0.3\}$ across 4 representative configurations on reference checkpoint (Seed 42).
+- **Model Checkpoint Selection:** $\Theta^* = \arg\min_{\Theta \in \{\Theta_{\text{best}}, \Theta_{\text{SWA}}\}}$ Val_Loss$(\Theta)$.
+- **Authoritative CSV Artifacts:**
+  - `TABLE1_BENCHMARK_FINAL.csv` / `github_release/results/TABLE1_BENCHMARK_FINAL.csv`: 5-seed aggregated benchmark performance with exact means, standard deviations, and individual seed outputs.
+  - `TABLE2_ABLATION_FINAL.csv`: 3-seed aggregated ablation study across standard ($H \le 336$) and extended ($H = 720$) regimes.
+  - `TABLE5_NOISE_ROBUSTNESS_FINAL.csv`: Multi-level noise degradation trajectory.
