@@ -6,6 +6,7 @@ This package reproduces the experimental evaluation, statistical tests, and publ
 - **Author:** Nguyen Phu Toan (nphu211206@gmail.com)
 - **Repository:** https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting
 - **Release Version:** v9.1 (Official Submission Release)
+- **Commit Hash:** `564c881b98de86ac6e6ecae16e33840209a7ac23`
 - **License:** MIT License
 
 ---

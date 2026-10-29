@@ -79,6 +79,6 @@ reviewed before the first public release.
 - Affiliation: Department of Information Technology, Hanoi University of
   Business and Technology, Hanoi, Vietnam.
 - Resource type: Software, with associated research data/supplementary evidence.
-- Suggested repository name: `kan-grid-update-reliability`.
+- Suggested repository name: `KAN-PSO-Transformer-Forecasting`.
 - Suggested release title: `Reproducible evidence for KAN training consistency
   and Grid-Update stability in transformer-temperature forecasting`.

@@ -1,7 +1,7 @@
 # KAN-HPO Experiment Evidence Registry
 
-**Frozen through:** 2026-08-17 K10 v2 canonical multi-horizon campaign  
-**Total experiment records:** 380
+**Frozen through:** 2026-10-28 K11 v9.1 multi-seed benchmark campaign  
+**Total experiment records:** 908 (380 K01–K10 records + 288 K11 benchmark evaluations + 240 K11 ablation evaluations)
 
 K10 v2 completed all 120 registered tasks and passed the dedicated artifact
 audit. V1 was stopped after its log revealed an implementation-only 360-task
@@ -129,9 +129,11 @@ passed `audit_k10.py`; all derived tables and figures come from that ZIP.
   - PatchTST Lite: evaluated across **3 independent seeds**: `{1000, 2000, 3000}`.
   - Total primary benchmark evaluations: 16 configs × 4 models × multi-seed = 288 evaluations.
 - **Ablation Campaign:** 5 structural variants (A1: NoHarmonicBank, A2: NoMultiKernelDecomp, A3: NoNeuralRouter, A4: NoCLPSO, A5: Full PSO-TCWavKAN) × 16 lookback–horizon configurations × 3 independent seeds = 240 evaluations.
-- **Noise Robustness Campaign:** Controlled zero-mean Gaussian perturbation $\sigma \in \{0.0, 0.1, 0.2, 0.3\}$ across 4 representative configurations on reference checkpoint (Seed 42).
+- **Noise Robustness Campaign:** Controlled zero-mean Gaussian perturbation $\sigma \in \{0.0, 0.1, 0.2, 0.3\}$ across 4 representative configurations on reference checkpoint (Seed 1000).
 - **Model Checkpoint Selection:** $\Theta^* = rg\min_{\Theta \in \{\Theta_{	ext{best}}, \Theta_{	ext{SWA}}\}} 	ext{Val\_Loss}(\Theta)$.
 - **Authoritative CSV Artifacts:**
   - `TABLE1_BENCHMARK_FINAL.csv`: 5-seed aggregated benchmark performance with exact means, standard deviations, and individual seed outputs.
   - `TABLE2_ABLATION_FINAL.csv`: 3-seed aggregated ablation study across standard ($H \le 336$) and extended ($H = 720$) regimes.
   - `TABLE5_NOISE_ROBUSTNESS_FINAL.csv`: Multi-level noise degradation trajectory.
+
+- **Release Commit Hash:** `564c881b98de86ac6e6ecae16e33840209a7ac23` (tagged as v9.1 official journal submission release).
