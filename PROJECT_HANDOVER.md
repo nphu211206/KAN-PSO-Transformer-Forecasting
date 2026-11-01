@@ -1,5 +1,7 @@
 # KAN-HPO Time-Series Forecasting: Project Handover
 
+> **LEGACY DOCUMENT (pre-v9.1).** This handover describes the K01-K10 predecessor project. It is retained for history. For the current PSO-TCWavKAN v9.1 release, use README.md, REPRODUCIBILITY.md, EXPERIMENT_REGISTRY.md, and CLAIM_EVIDENCE_MATRIX.md. The counts and figure/table numbers below are not v9.1 claims.
+
 **Updated:** 2026-08-17  
 **Target journal:** Electrical Engineering (Archiv fur Elektrotechnik) (Electrical Engineering)  
 **Current evidence:** 380 frozen experiment records through K10  

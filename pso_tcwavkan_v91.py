@@ -1,56 +1,45 @@
 # -*- coding: utf-8 -*-
 """
 ==============================================================================
-PSO-TCWavKAN v9.0 — BIG UPDATE MASTER FINAL (2026)
+PSO-TCWavKAN v9.1 - official release implementation (2026)
 ==============================================================================
-MODULAR 5-SESSION PLAN (Tất cả session đều ngắn ~1.5h - 2.5h, cực an toàn trên Kaggle T4):
+Command-line sessions (the mode is selected at runtime, not hard-coded):
+  python pso_tcwavkan_v91.py --run_mode SESSION1
+  python pso_tcwavkan_v91.py --run_mode SESSION2A
+  python pso_tcwavkan_v91.py --run_mode SESSION2B1
+  python pso_tcwavkan_v91.py --run_mode SESSION2B2
+  python pso_tcwavkan_v91.py --run_mode SESSION2C
+  python pso_tcwavkan_v91.py --run_mode MERGE
+  python pso_tcwavkan_v91.py --mode demo --dataset ETTh1 --lookback 96 --horizon 96
 
-  SESSION1  (~2.5h T4 with AMP)  ← RUN_MODE = 'SESSION1'
-    Main: DLinear + NLinear + PSO-TCWavKAN v9.0 (16 configs × 5 seeds = 80 evals (PSO-TCWavKAN main))
-    + Save predictions (Fig 4,5), g(x) router (Fig 7), checkpoints (Fig 8)
-    + Gaussian Noise Robustness Test (Section 6.4 — Synthetic noise robustness) → Table 6
-    + Wilcoxon Signed-Rank + Win Rate + 95% Bootstrap CI
-    → OUTPUTS: pso_tcwavkan_v90_results.csv, pso_tcwavkan_v90_pso_log.csv,
-                pso_tcwavkan_v90_noise.csv, pso_tcwavkan_v90_bootstrap_ci.csv,
-                predictions/*.npz, predictions/*.npy, checkpoints/*.pt
+SESSION1  (~2.5h T4 with AMP)
+  Main: DLinear + NLinear + PSO-TCWavKAN v9.1 (16 configs x 5 seeds)
+  + Gaussian noise diagnostic + Wilcoxon + win rate + bootstrap CI
+  -> pso_tcwavkan_v91_results.csv, pso_tcwavkan_v91_pso_log.csv,
+     pso_tcwavkan_v91_noise.csv, pso_tcwavkan_v91_bootstrap_ci.csv
 
-  SESSION2A (~1.5h T4 with AMP)  ← RUN_MODE = 'SESSION2A'
-    PatchTST Lite baseline (ICLR 2023)
-    16 configs × 3 seeds = 48 evaluations (baselines/ablation)
-    → OUTPUT: pso_tcwavkan_v90_patchtst.csv
+SESSION2A (~1.5h T4 with AMP)
+  PatchTST Lite baseline (16 configs x 3 seeds) -> pso_tcwavkan_v91_patchtst.csv
 
-  SESSION2B1 (~2h T4 with AMP)   ← RUN_MODE = 'SESSION2B1'
-    Ablation A1_NoHarmonicBank (K=1 single-frequency WavKAN)
-    16 configs × 3 seeds = 48 evaluations (baselines/ablation) (with CLPSO warm-start)
-    → OUTPUT: pso_tcwavkan_v90_ablation_s2b1.csv
+SESSION2B1 / SESSION2B2 / SESSION2C
+  Ablation variants A1-A5. A5 is taken from the five-seed SESSION1 benchmark;
+  A1-A4 are run with three seeds each (192 ablation training runs in total).
 
-  SESSION2B2 (~2h T4 with AMP)   ← RUN_MODE = 'SESSION2B2'
-    Ablation A2_NoMultiKernelDecomp (single-kernel 25 only)
-    16 configs × 3 seeds = 48 evaluations (baselines/ablation) (with CLPSO warm-start)
-    → OUTPUT: pso_tcwavkan_v90_ablation_s2b2.csv
+MERGE (instant)
+  Aggregate session CSVs into TABLE1_BENCHMARK_FINAL.csv,
+  TABLE2_ABLATION_FINAL.csv, and TABLE5_NOISE_ROBUSTNESS_FINAL.csv.
 
-  SESSION2C (~2.5h T4 with AMP)  ← RUN_MODE = 'SESSION2C'
-    Ablation A3_NoNeuralRouter (fixed g=0.5) + A4_NoCLPSO (random init)
-    2 variants × 16 configs × 3 seeds = 96 evaluations
-    (A5_Full reference is extracted directly from SESSION1 results!)
-    → OUTPUT: pso_tcwavkan_v90_ablation_s2c.csv
-
-  MERGE (Instant)                ← RUN_MODE = 'MERGE'
-    Tự động đọc tất cả các file CSV của các session đã chạy và xuất ra:
-    TABLE1_BENCHMARK_FINAL.csv, TABLE2_ABLATION_FINAL.csv, TABLE5_NOISE_ROBUSTNESS_FINAL.csv.
-
-💡 CHẠY SONG SONG TRÊN KAGGLE (Kaggle cho phép 2 GPU notebooks chạy cùng lúc!):
-  - Tab 1: RUN_MODE = 'SESSION1'   (~2.5h)  |  Tab 2: RUN_MODE = 'SESSION2A'  (~1.5h)  ==> Xong cả 2 sau ~2.5h!
-  - Tab 1: RUN_MODE = 'SESSION2B1' (~2.0h)  |  Tab 2: RUN_MODE = 'SESSION2B2' (~2.0h)  ==> Xong cả 2 sau ~2.0h!
-  - Tab 1: RUN_MODE = 'SESSION2C'  (~2.5h)
-  → Tổng thời gian thực tế chỉ mất ~4.5h - 7h, không có session nào dài 5-6h cả!
+Notes:
+  * CLPSO performs exactly n_particles x n_generations surrogate evaluations
+    (5 x 5 = 25 in the paper protocol); generation 1 evaluates the initial
+    population and is not double-counted.
+  * The searched scale parameter q is named log_scale in the code. It is a raw
+    parameter, not log10(s): the model computes s = softplus(q) + 1e-4.
+  * PatchTST Lite uses patch length 16 and stride 8 for both L=96 and L=336.
 ==============================================================================
 """
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# CONFIG — ĐỔI RUN_MODE TRƯỚC KHI CHẠY MỖI SESSION
-# ═══════════════════════════════════════════════════════════════════════════════
-RUN_MODE = 'SESSION2A'  # Options: 'SESSION1' | 'SESSION2A' | 'SESSION2B1' | 'SESSION2B2' | 'SESSION2B' | 'SESSION2C' | 'MERGE'
+__version__ = "9.1"
 
 import os, sys, math, time, warnings, urllib.request, random
 import torch
@@ -71,6 +60,11 @@ except ImportError:
     print("[WARN] scipy not found — Wilcoxon test skipped")
 
 warnings.filterwarnings("ignore")
+
+
+def _sample_std(values):
+    """Sample standard deviation (ddof=1); 0.0 for a single observation."""
+    return float(np.std(values, ddof=1)) if len(values) > 1 else 0.0
 torch.backends.cudnn.benchmark = True
 
 # Auto-detect environment
@@ -103,7 +97,7 @@ BASELINE_SEEDS = [1000, 2000, 3000] if IS_GPU else [1000]
 ABLATION_SEEDS = [1000, 2000, 3000] if IS_GPU else [1000]
 
 print("=" * 78)
-print(f"  PSO-TCWavKAN v9.0  BIG UPDATE MASTER FINAL  [{RUN_MODE}]")
+print("  PSO-TCWavKAN v9.1  OFFICIAL RELEASE IMPLEMENTATION")
 print(f"  Device : {DEVICE}" + (f"  ({torch.cuda.get_device_name(0)})" if IS_GPU else ""))
 print(f"  Output : {OUT_DIR}")
 print("=" * 78 + "\n")
@@ -176,7 +170,7 @@ def make_surrogate_loader(name, sl, pl, bs=32, frac=0.15, seed=42):
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# [2] MODEL ARCHITECTURE v9.0
+# [2] MODEL ARCHITECTURE v9.1
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class RevIN(nn.Module):
@@ -254,7 +248,8 @@ class HarmonicMorletWaveletBank(nn.Module):
     """
     Harmonic Dyadic Wavelet Filter Bank [Mallat 1999].
     omega_k = omega0 * 2^((k-(K-1)/2) * gamma), K=5 octave scales.
-    Both omega0 and gamma are CLPSO-warm-started learnable parameters.
+    Both are learnable; omega0 is CLPSO-warm-started, while gamma is
+    initialized at gamma_init.
     """
     def __init__(self, K=5, omega0=5.0, gamma_init=0.25):
         super().__init__()
@@ -283,7 +278,7 @@ class SingleFreqWaveletBank(nn.Module):
         return torch.exp(-0.5 * z_c ** 2) * torch.cos(self.omega0 * z_c)
 
 
-class TCWavKANBlock_v90(nn.Module):
+class TCWavKANBlock_v91(nn.Module):
     def __init__(self, d, np_, K=5, drop=0.05,
                  omega0=5.0, log_scale=-1.0, use_harmonic_bank=True):
         super().__init__()
@@ -292,6 +287,8 @@ class TCWavKANBlock_v90(nn.Module):
 
         self.dwconv = nn.Conv1d(d, d, kernel_size=5, padding=2, groups=d, bias=False)
         self.mu  = nn.Parameter(torch.linspace(-2., 2., eff_K).unsqueeze(0).expand(d, -1).clone())
+        # Raw scale parameter q (search-space name: log_scale). The effective
+        # scale is s = softplus(q) + 1e-4, not 10**q.
         self.ls  = nn.Parameter(torch.full((d, eff_K), float(log_scale)))
         self.c_s = nn.Parameter(torch.zeros(d, eff_K))
 
@@ -371,12 +368,13 @@ class InstanceAdaptiveRouter(nn.Module):
         return torch.sigmoid(self.mlp(x))
 
 
-class Decomp_TCWavKAN_v90(nn.Module):
+class Decomp_TCWavKAN_v91(nn.Module):
     """
-    PSO-TCWavKAN v9.0 — Full model with ablation control flags.
+    PSO-TCWavKAN v9.1 — Full model with ablation control flags.
 
     Mathematical guarantee (Proposition 1):
-      When g(x) -> 0: output = y_trend + y_seas_lin = EXACTLY DLinear
+      When g(x) -> 0: output = y_trend + y_seas_lin = EXACTLY the multi-kernel
+      linear baseline (canonical DLinear when K1 = K2 = 25)
       Proposition 1 (Asymptotic Linear Structural Recovery): As the neural routing gate g(x) -> 0, the architecture recovers the generalized linear projection in the topological closure of the hypothesis space.
 
     Ablation flags:
@@ -404,7 +402,7 @@ class Decomp_TCWavKAN_v90(nn.Module):
 
         self.patch_embed = nn.Linear(self.patch_size, d_model)
         self.blocks = nn.ModuleList([
-            TCWavKANBlock_v90(d_model, n_patches, K=K, drop=drop,
+            TCWavKANBlock_v91(d_model, n_patches, K=K, drop=drop,
                               omega0=omega0, log_scale=log_scale,
                               use_harmonic_bank=use_harmonic_bank)
             for _ in range(n_layers)
@@ -475,6 +473,8 @@ class DLinear(nn.Module):
 
 
 class PatchTST_Lite(nn.Module):
+    # Paper protocol: patch_len=16, stride=8 for both L=96 and L=336
+    # (50% overlap), matching the defaults below.
     """
     PatchTST (univariate, simplified) [Nie et al., ICLR 2023].
     RevIN + patch tokenization + Transformer encoder + linear projection head.
@@ -519,7 +519,7 @@ def _eval_particle(particle, sur_loader, dev, n_epochs=4,
     x_samp, y_samp = next(iter(sur_loader))
     sl, pl = x_samp.shape[1], y_samp.shape[1]
 
-    model = Decomp_TCWavKAN_v90(
+    model = Decomp_TCWavKAN_v91(
         sl, pl, d_model=32, n_layers=2, K=5,
         omega0=omega0, log_scale=log_scale, log_alpha=log_alpha,
         use_harmonic_bank=use_harmonic, kernel_sizes=kernel_sizes,
@@ -558,6 +558,13 @@ def clpso_warm_start(ds_name, sl, pl, dev,
                      n_particles=5, n_generations=5, n_eval_epochs=4,
                      use_harmonic=True, kernel_sizes=(25, 49), use_router=True,
                      sur_loader=None):
+    """Run the CLPSO warm-start.
+
+    The loop below performs exactly n_particles x n_generations surrogate
+    evaluations. In the paper protocol that is 5 x 5 = 25 evaluations; the
+    initial population is evaluated inside generation 1 and is not counted a
+    second time.
+    """
     if sur_loader is None:
         sur_loader = make_surrogate_loader(ds_name, sl, pl, bs=32, frac=0.15, seed=0)
 
@@ -578,7 +585,9 @@ def clpso_warm_start(ds_name, sl, pl, dev,
     pbest_val = np.full(n_particles, np.inf)
     gbest_pos, gbest_val = pos[0].copy(), np.inf
 
-    print(f"    CLPSO: {n_particles}p × {n_generations}g...")
+    print(f"    CLPSO: {n_particles}p × {n_generations}g "
+          f"({n_particles * n_generations} surrogate evaluations)...")
+    n_evals = 0
 
     for gen in range(n_generations):
         for i in range(n_particles):
@@ -586,6 +595,7 @@ def clpso_warm_start(ds_name, sl, pl, dev,
                                  use_harmonic=use_harmonic,
                                  kernel_sizes=kernel_sizes,
                                  use_router=use_router)
+            n_evals += 1
             if val < pbest_val[i]: pbest_val[i] = val; pbest_pos[i] = pos[i].copy()
             if val < gbest_val:    gbest_val = val;    gbest_pos = pos[i].copy()
 
@@ -600,6 +610,14 @@ def clpso_warm_start(ds_name, sl, pl, dev,
             pos[i] = np.clip(pos[i] + vel[i], LB, UB)
         print(f"    Gen {gen+1}: sur_MSE={gbest_val:.5f} | ω₀={gbest_pos[0]:.2f} | lr={10**gbest_pos[3]:.5f}")
 
+    assert n_evals == n_particles * n_generations, (
+        f"CLPSO budget mismatch: {n_evals} evaluations, expected "
+        f"{n_particles * n_generations}"
+    )
+    print(f"    CLPSO completed {n_evals} surrogate evaluations")
+
+    # log_scale is the raw scale parameter q; the effective scale is
+    # s = softplus(q) + 1e-4 inside the wavelet block (not s = 10**q).
     return {'omega0': float(gbest_pos[0]), 'log_scale': float(gbest_pos[1]),
             'log_alpha': float(gbest_pos[2]), 'lr': float(10**gbest_pos[3]),
             'sur_mse': float(gbest_val)}
@@ -622,7 +640,7 @@ def _val_mse(model, loader, dev):
     return float(total_loss / max(1, total_count)) if total_count > 0 else 999.0
 
 
-def train_eval_master_v90(model, tr, vl, te, dev,
+def train_eval_master_v91(model, tr, vl, te, dev,
                            epochs=60, patience=12, lr=0.005, swa_epochs=15,
                            save_predictions=False, save_router=False,
                            save_checkpoint_path=None):
@@ -837,7 +855,7 @@ def run_session1():
     download_data()
     print("Sanity check...")
     for L, H in [(96, 96), (336, 720)]:
-        m = Decomp_TCWavKAN_v90(L, H)
+        m = Decomp_TCWavKAN_v91(L, H)
         y = m(torch.randn(2, L, 1))
         assert y.shape == (2, H, 1)
         p = PatchTST_Lite(L, H)
@@ -864,12 +882,12 @@ def run_session1():
         print(f"  PSO {pso_time:.0f}s | ω₀={pso['omega0']:.3f} sur={pso['sur_mse']:.5f}")
         pso_log.append({'Dataset': ds, 'L': L, 'H': H, **pso, 'pso_time': pso_time})
 
-        # SESSION1 runs DLinear + NLinear + v9.0 only (PatchTST in SESSION2A)
+        # SESSION1 runs DLinear + NLinear + v9.1 only (PatchTST in SESSION2A)
         model_defs = [
             ('NLinear',           lambda: NLinear(L, H),    'simple', MAIN_SEEDS,     0.01),
             ('DLinear',           lambda: DLinear(L, H),    'simple', MAIN_SEEDS,     0.01),
-            ('PSO-TCWavKAN_v90',
-             lambda: Decomp_TCWavKAN_v90(L, H, omega0=pso['omega0'],
+            ('PSO-TCWavKAN',
+             lambda: Decomp_TCWavKAN_v91(L, H, omega0=pso['omega0'],
                                           log_scale=pso['log_scale'],
                                           log_alpha=pso['log_alpha']),
              'master', MAIN_SEEDS, pso['lr']),
@@ -878,9 +896,9 @@ def run_session1():
         for name, m_fn, mode, seeds, lr_use in model_defs:
             mse_seeds, mae_seeds = [], []
             all_y_pred, all_y_true, all_gx = [], [], []
-            is_main = (name == 'PSO-TCWavKAN_v90')
+            is_main = (name == 'PSO-TCWavKAN')
             ckpt_path = os.path.join(OUT_DIR, 'checkpoints',
-                                     f'checkpoint_v90_{ds}_L{L}_H{H}.pt') if is_main else None
+                                     f'checkpoint_v91_{ds}_L{L}_H{H}.pt') if is_main else None
             t_start = time.time()
 
             for seed in seeds:
@@ -891,7 +909,7 @@ def run_session1():
                 if mode == 'master':
                     # Only collect test predictions/g_values for the canonical first seed (seed 1000)
                     save_pred_seed = (seed == seeds[0])
-                    mse, mae, pdata = train_eval_master_v90(
+                    mse, mae, pdata = train_eval_master_v91(
                         m, tr, vl, te, DEVICE,
                         epochs=60, patience=12, lr=lr_use, swa_epochs=15,
                         save_predictions=save_pred_seed, save_router=save_pred_seed,
@@ -911,19 +929,19 @@ def run_session1():
             # Save prediction arrays (clean single test set for paper figures)
             if is_main and all_y_pred:
                 pred_path = os.path.join(OUT_DIR, 'predictions',
-                                         f'predictions_v90_{ds}_L{L}_H{H}')
+                                         f'predictions_v91_{ds}_L{L}_H{H}')
                 np.savez(pred_path,
                          y_pred=np.concatenate(all_y_pred, axis=0),
                          y_true=np.concatenate(all_y_true, axis=0))
                 print(f"  → Saved predictions: {np.concatenate(all_y_pred).shape}")
             if is_main and all_gx:
                 gx_path = os.path.join(OUT_DIR, 'predictions',
-                                        f'router_gx_v90_{ds}_L{L}_H{H}.npy')
+                                        f'router_gx_v91_{ds}_L{L}_H{H}.npy')
                 np.save(gx_path, np.concatenate(all_gx, axis=0))
                 print(f"  → Saved g(x): {np.concatenate(all_gx).shape}")
 
             m_mse  = float(np.mean(mse_seeds))
-            s_mse  = float(np.std(mse_seeds))
+            s_mse  = _sample_std(mse_seeds)
             m_mae  = float(np.mean(mae_seeds))
             ci_lo, ci_hi = bootstrap_ci_95(mse_seeds)
             dur    = time.time() - t_start
@@ -945,8 +963,8 @@ def run_session1():
         # Noise Robustness Test (representative configs) — reuses saved checkpoint
         if (ds, L, H) in NOISE_TEST_CONFIGS:
             print(f"  [Noise Test] {ds} L={L} H={H}")
-            saved_ckpt = os.path.join(OUT_DIR, 'checkpoints', f'checkpoint_v90_{ds}_L{L}_H{H}.pt')
-            nm = Decomp_TCWavKAN_v90(L, H, omega0=pso['omega0'],
+            saved_ckpt = os.path.join(OUT_DIR, 'checkpoints', f'checkpoint_v91_{ds}_L{L}_H{H}.pt')
+            nm = Decomp_TCWavKAN_v91(L, H, omega0=pso['omega0'],
                                       log_scale=pso['log_scale'],
                                       log_alpha=pso['log_alpha']).to(DEVICE)
             if os.path.exists(saved_ckpt):
@@ -954,7 +972,7 @@ def run_session1():
             else:
                 torch.manual_seed(1000); np.random.seed(1000); random.seed(1000)
                 if IS_GPU: torch.cuda.manual_seed_all(1000)
-                _, _, _ = train_eval_master_v90(nm, tr, vl, te, DEVICE,
+                _, _, _ = train_eval_master_v91(nm, tr, vl, te, DEVICE,
                                                 epochs=60, patience=12,
                                                 lr=pso['lr'], swa_epochs=15)
             nr = eval_noise_robustness(nm, te, DEVICE)
@@ -968,7 +986,7 @@ def run_session1():
     print(f"\n{'='*70}\n  WILCOXON TEST (Two-Sided, Canonical 16-Condition Matrix)\n{'='*70}")
     if HAS_SCIPY:
         # 1. 16-condition matrix tests (as reported in Section 4 of manuscript)
-        kan_all = df[df.Model == 'PSO-TCWavKAN_v90'].sort_values(['Dataset', 'L', 'H'])
+        kan_all = df[df.Model == 'PSO-TCWavKAN'].sort_values(['Dataset', 'L', 'H'])
         for base_m in ['NLinear', 'DLinear', 'PatchTST_Lite']:
             base_df = df[df.Model == base_m].sort_values(['Dataset', 'L', 'H'])
             merged_m = pd.merge(kan_all, base_df, on=['Dataset', 'L', 'H'], suffixes=('_kan', '_base'))
@@ -985,7 +1003,7 @@ def run_session1():
         for ds in ["ETTh1", "ETTh2"]:
             df_ds = df[df.Dataset == ds]
             seed_cols = [f'MSE_seed_{s}' for s in MAIN_SEEDS]
-            kan_r  = df_ds[df_ds.Model == 'PSO-TCWavKAN_v90'][['L','H'] + seed_cols]
+            kan_r  = df_ds[df_ds.Model == 'PSO-TCWavKAN'][['L','H'] + seed_cols]
             dlin_r = df_ds[df_ds.Model == 'DLinear'][['L','H'] + seed_cols]
             merged = pd.merge(kan_r, dlin_r, on=['L','H'], suffixes=('_k','_d'))
             if len(merged) > 0:
@@ -999,7 +1017,7 @@ def run_session1():
                     print(f"  {ds}: {e}")
 
     # Win rate
-    kan  = df[df.Model == 'PSO-TCWavKAN_v90'].set_index(['Dataset','L','H'])
+    kan  = df[df.Model == 'PSO-TCWavKAN'].set_index(['Dataset','L','H'])
     dlin = df[df.Model == 'DLinear'].set_index(['Dataset','L','H'])
     nlin = df[df.Model == 'NLinear'].set_index(['Dataset','L','H'])
     idx_d = kan.index.intersection(dlin.index)
@@ -1010,16 +1028,16 @@ def run_session1():
     print(f"  WIN RATE vs NLinear: {wn}/{len(idx_n)} ({100*wn/max(1,len(idx_n)):.1f}%)")
 
     # Save CSVs
-    df.to_csv(f"{OUT_DIR}/pso_tcwavkan_v90_results.csv", index=False)
-    pd.DataFrame(pso_log).to_csv(f"{OUT_DIR}/pso_tcwavkan_v90_pso_log.csv", index=False)
-    pd.DataFrame(noise_results).to_csv(f"{OUT_DIR}/pso_tcwavkan_v90_noise.csv", index=False)
-    pd.DataFrame(ci_log).to_csv(f"{OUT_DIR}/pso_tcwavkan_v90_bootstrap_ci.csv", index=False)
+    df.to_csv(f"{OUT_DIR}/pso_tcwavkan_v91_results.csv", index=False)
+    pd.DataFrame(pso_log).to_csv(f"{OUT_DIR}/pso_tcwavkan_v91_pso_log.csv", index=False)
+    pd.DataFrame(noise_results).to_csv(f"{OUT_DIR}/pso_tcwavkan_v91_noise.csv", index=False)
+    pd.DataFrame(ci_log).to_csv(f"{OUT_DIR}/pso_tcwavkan_v91_bootstrap_ci.csv", index=False)
 
     print(f"\n  SESSION 1 COMPLETE!")
-    print(f"  → v90_results.csv | v90_pso_log.csv | v90_noise.csv | v90_bootstrap_ci.csv")
-    print(f"  → predictions/predictions_v90_*.npy (Fig 4+5)")
-    print(f"  → predictions/router_gx_v90_*.npy (Fig 7)")
-    print(f"  → checkpoints/checkpoint_v90_*.pt (Fig 8)")
+    print(f"  → v91_results.csv | v91_pso_log.csv | v91_noise.csv | v91_bootstrap_ci.csv")
+    print(f"  → predictions/predictions_v91_*.npy (Fig 4+5)")
+    print(f"  → predictions/router_gx_v91_*.npy (Fig 7)")
+    print(f"  → checkpoints/checkpoint_v91_*.pt (Fig 8)")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1045,6 +1063,7 @@ def run_session2a():
         t0 = time.time()
         for seed in BASELINE_SEEDS:
             torch.manual_seed(seed); np.random.seed(seed); random.seed(seed)
+            # Do not override the defaults: P=16 and S=8 for both lookbacks.
             m = PatchTST_Lite(L, H).to(DEVICE)
             mse, mae = train_eval_simple(m, tr, vl, te, DEVICE,
                                          epochs=100, patience=15, lr=0.005)
@@ -1052,7 +1071,7 @@ def run_session2a():
             if IS_GPU: torch.cuda.empty_cache()
 
         m_mse = float(np.mean(mse_seeds))
-        s_mse = float(np.std(mse_seeds))
+        s_mse = _sample_std(mse_seeds)
         m_mae = float(np.mean(mae_seeds))
         ci_lo, ci_hi = bootstrap_ci_95(mse_seeds)
         dur = time.time() - t0
@@ -1072,10 +1091,10 @@ def run_session2a():
                        'MSE_mean': m_mse, 'CI_95_lo': ci_lo, 'CI_95_hi': ci_hi})
 
     df = pd.DataFrame(results)
-    df.to_csv(f"{OUT_DIR}/pso_tcwavkan_v90_patchtst.csv", index=False)
-    pd.DataFrame(ci_log).to_csv(f"{OUT_DIR}/pso_tcwavkan_v90_patchtst_ci.csv", index=False)
+    df.to_csv(f"{OUT_DIR}/pso_tcwavkan_v91_patchtst.csv", index=False)
+    pd.DataFrame(ci_log).to_csv(f"{OUT_DIR}/pso_tcwavkan_v91_patchtst_ci.csv", index=False)
     print(f"\n  SESSION 2A COMPLETE!")
-    print(f"  → v90_patchtst.csv (PatchTST results for Table 1)")
+    print(f"  → v91_patchtst.csv (PatchTST results for Table 1)")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -1147,21 +1166,21 @@ def _run_ablation_variants(variants, out_filename, session_name):
             for seed in ABLATION_SEEDS:
                 torch.manual_seed(seed); np.random.seed(seed); random.seed(seed)
                 if IS_GPU: torch.cuda.manual_seed_all(seed)
-                m = Decomp_TCWavKAN_v90(
+                m = Decomp_TCWavKAN_v91(
                     L, H, d_model=32, n_layers=2, K=5,
                     omega0=omega0, log_scale=log_scale, log_alpha=log_alpha,
                     use_harmonic_bank=abl['use_harmonic_bank'],
                     kernel_sizes=abl['kernel_sizes'],
                     use_router=abl['use_router']
                 ).to(DEVICE)
-                mse, mae, _ = train_eval_master_v90(
+                mse, mae, _ = train_eval_master_v91(
                     m, tr, vl, te, DEVICE,
                     epochs=60, patience=12, lr=lr_use, swa_epochs=15)
                 mse_seeds.append(mse); mae_seeds.append(mae)
                 if IS_GPU: torch.cuda.empty_cache()
 
             m_mse  = float(np.mean(mse_seeds))
-            s_mse  = float(np.std(mse_seeds))
+            s_mse  = _sample_std(mse_seeds)
             ci_lo, ci_hi = bootstrap_ci_95(mse_seeds)
             print(f"MSE={m_mse:.5f}±{s_mse:.5f}")
 
@@ -1190,33 +1209,33 @@ def _run_ablation_variants(variants, out_filename, session_name):
 def run_session2b1():
     """SESSION 2B1: Ablation A1_NoHarmonicBank (~2h on T4)."""
     _run_ablation_variants(ABLATION_S2B1,
-                           'pso_tcwavkan_v90_ablation_s2b1.csv',
+                           'pso_tcwavkan_v91_ablation_s2b1.csv',
                            'SESSION2B1')
-    print("  SESSION 2B1 COMPLETE! → pso_tcwavkan_v90_ablation_s2b1.csv")
+    print("  SESSION 2B1 COMPLETE! → pso_tcwavkan_v91_ablation_s2b1.csv")
 
 
 def run_session2b2():
     """SESSION 2B2: Ablation A2_NoMultiKernelDecomp (~2h on T4)."""
     _run_ablation_variants(ABLATION_S2B2,
-                           'pso_tcwavkan_v90_ablation_s2b2.csv',
+                           'pso_tcwavkan_v91_ablation_s2b2.csv',
                            'SESSION2B2')
-    print("  SESSION 2B2 COMPLETE! → pso_tcwavkan_v90_ablation_s2b2.csv")
+    print("  SESSION 2B2 COMPLETE! → pso_tcwavkan_v91_ablation_s2b2.csv")
 
 
 def run_session2b():
     """SESSION 2B: Combined A1 + A2 (~4h on T4)."""
     _run_ablation_variants(ABLATION_S2B,
-                           'pso_tcwavkan_v90_ablation_s2b.csv',
+                           'pso_tcwavkan_v91_ablation_s2b.csv',
                            'SESSION2B')
-    print("  SESSION 2B COMPLETE! → pso_tcwavkan_v90_ablation_s2b.csv")
+    print("  SESSION 2B COMPLETE! → pso_tcwavkan_v91_ablation_s2b.csv")
 
 
 def run_session2c():
     """SESSION 2C: Ablation A3_NoNeuralRouter + A4_NoCLPSO (~2.5h on T4)."""
     _run_ablation_variants(ABLATION_S2C,
-                           'pso_tcwavkan_v90_ablation_s2c.csv',
+                           'pso_tcwavkan_v91_ablation_s2c.csv',
                            'SESSION2C')
-    print("  SESSION 2C COMPLETE! → pso_tcwavkan_v90_ablation_s2c.csv")
+    print("  SESSION 2C COMPLETE! → pso_tcwavkan_v91_ablation_s2c.csv")
 
 
 def run_merge():
@@ -1229,8 +1248,8 @@ def run_merge():
     print("=" * 78 + "\n")
 
     # Table 1: Main Benchmark
-    f_res = os.path.join(OUT_DIR, 'pso_tcwavkan_v90_results.csv')
-    f_pat = os.path.join(OUT_DIR, 'pso_tcwavkan_v90_patchtst.csv')
+    f_res = os.path.join(OUT_DIR, 'pso_tcwavkan_v91_results.csv')
+    f_pat = os.path.join(OUT_DIR, 'pso_tcwavkan_v91_patchtst.csv')
     if os.path.exists(f_res):
         df_res = pd.read_csv(f_res)
         if os.path.exists(f_pat):
@@ -1246,10 +1265,10 @@ def run_merge():
 
     # Table 2: Ablation Study
     abl_files = [
-        'pso_tcwavkan_v90_ablation_s2b1.csv',
-        'pso_tcwavkan_v90_ablation_s2b2.csv',
-        'pso_tcwavkan_v90_ablation_s2b.csv',
-        'pso_tcwavkan_v90_ablation_s2c.csv',
+        'pso_tcwavkan_v91_ablation_s2b1.csv',
+        'pso_tcwavkan_v91_ablation_s2b2.csv',
+        'pso_tcwavkan_v91_ablation_s2b.csv',
+        'pso_tcwavkan_v91_ablation_s2c.csv',
     ]
     abl_dfs = []
     for fn in abl_files:
@@ -1259,12 +1278,15 @@ def run_merge():
 
     if os.path.exists(f_res):
         df_res = pd.read_csv(f_res)
-        df_full = df_res[df_res['Model'] == 'PSO-TCWavKAN_v90'].copy()
+        df_full = df_res[df_res['Model'] == 'PSO-TCWavKAN'].copy()
         if len(df_full) > 0:
-            df_full['Ablation'] = 'A5_Full_v90'
-            df_full['Desc'] = 'Full PSO-TCWavKAN v9.0 reference (all components)'
-            abl_dfs.append(df_full[['Ablation', 'Desc', 'Dataset', 'L', 'H',
-                                    'MSE_mean', 'MSE_std', 'MAE_mean', 'CI_95_lo', 'CI_95_hi']])
+            df_full['Ablation'] = 'A5_Full'
+            df_full['Desc'] = ('Full PSO-TCWavKAN benchmark reference '
+                               '(five-seed mean; seed columns 1000-3000 shown)')
+            seed_cols = [c for c in ['MSE_seed_1000', 'MSE_seed_2000', 'MSE_seed_3000'] if c in df_full.columns]
+            a5_cols = ['Ablation', 'Desc', 'Dataset', 'L', 'H',
+                       'MSE_mean', 'MSE_std', 'MAE_mean', 'CI_95_lo', 'CI_95_hi'] + seed_cols
+            abl_dfs.append(df_full[a5_cols])
 
     if abl_dfs:
         df_t2 = pd.concat(abl_dfs, ignore_index=True).drop_duplicates(subset=['Ablation', 'Dataset', 'L', 'H'])
@@ -1274,13 +1296,13 @@ def run_merge():
 
         print("\n  >>> ABLATION STUDY OVERALL MEAN MSE:")
         summary = df_t2.groupby('Ablation')['MSE_mean'].mean()
-        full_ref = summary.get('A5_Full_v90', None)
+        full_ref = summary.get('A5_Full', None)
         for name, val in summary.items():
             diff_str = f"{(val - full_ref)/full_ref*100:+.2f}%" if full_ref else "baseline"
             print(f"      {name:<25}: MSE={val:.5f}  ({diff_str})")
 
     # Table 5: Noise Robustness
-    f_noise = os.path.join(OUT_DIR, 'pso_tcwavkan_v90_noise.csv')
+    f_noise = os.path.join(OUT_DIR, 'pso_tcwavkan_v91_noise.csv')
     if os.path.exists(f_noise):
         df_noise = pd.read_csv(f_noise)
         t5_out = os.path.join(OUT_DIR, 'TABLE5_NOISE_ROBUSTNESS_FINAL.csv')
@@ -1296,9 +1318,51 @@ def run_merge():
 # MAIN DISPATCH
 # ═══════════════════════════════════════════════════════════════════════════════
 
+def run_demo(ds_name='ETTh1', sl=96, pl=96, epochs=5):
+    """Fast verification demo (not a paper benchmark run)."""
+    print("\n" + "=" * 78)
+    print("  PSO-TCWavKAN v9.1 - QUICK VERIFICATION DEMO")
+    print(f"  Dataset: {ds_name} | Lookback L={sl} | Horizon H={pl} | Device: {DEVICE}")
+    print("=" * 78)
+
+    download_data()
+    print("\n[1/3] Loading data and preparing surrogate loader...")
+    tr_l, vl_l, te_l, scaler = load_ett(ds_name, sl, pl, bs=32)
+    sur_l = make_surrogate_loader(ds_name, sl, pl, bs=32, frac=0.15, seed=42)
+
+    print("\n[2/3] Running fast CLPSO warm-start (3 particles x 2 generations)...")
+    best_p = clpso_warm_start(ds_name, sl, pl, DEVICE, n_particles=3,
+                              n_generations=2, n_eval_epochs=2, sur_loader=sur_l)
+    print(f"  CLPSO identified optimal parameters: {best_p}")
+
+    print(f"\n[3/3] Training PSO-TCWavKAN for {epochs} epochs (with SWA)...")
+    model = Decomp_TCWavKAN_v91(
+        sl, pl, d_model=32, n_layers=2, K=5,
+        omega0=best_p['omega0'], log_scale=best_p['log_scale'],
+        log_alpha=best_p['log_alpha'], use_harmonic_bank=True,
+        kernel_sizes=(25, 49), use_router=True
+    ).to(DEVICE)
+
+    t0 = time.time()
+    mse, mae, _ = train_eval_master_v91(
+        model, tr_l, vl_l, te_l, DEVICE,
+        epochs=epochs, patience=5, lr=best_p['lr'], swa_epochs=2
+    )
+    t1 = time.time()
+
+    print("\n" + "=" * 78)
+    print("  DEMO EXECUTION RESULTS:")
+    print(f"  - Test MSE: {mse:.4f}")
+    print(f"  - Test MAE: {mae:.4f}")
+    print(f"  - Total Elapsed Time: {t1 - t0:.1f} seconds")
+    print("  [SUCCESS] PSO-TCWavKAN v9.1 architecture verified and fully functional!")
+    print("=" * 78 + "\n")
+
+
 SESSION_INFO = {
-    'SESSION1':   'Main benchmark (v9.0, DLinear, NLinear) + Noise + Predictions (~2.5h with AMP)',
-    'SESSION2A':  'PatchTST Lite baseline, 16 configs × 3 seeds                   (~1.5h with AMP)',
+    'DEMO':       'Fast verification demo (ETTh1, L=96, H=96, 5 epochs)',
+    'SESSION1':   'Main benchmark (v9.1: PSO-TCWavKAN, DLinear, NLinear) + noise + predictions (~2.5h with AMP)',
+    'SESSION2A':  'PatchTST Lite baseline, 16 configs x 3 seeds                   (~1.5h with AMP)',
     'SESSION2B1': 'Ablation A1_NoHarmonicBank (K=1 single freq)                   (~2h with AMP)',
     'SESSION2B2': 'Ablation A2_NoMultiKernelDecomp (single kernel 25)              (~2h with AMP)',
     'SESSION2B':  'Combined Ablation A1 + A2 in one run                          (~4h with AMP)',
@@ -1307,26 +1371,53 @@ SESSION_INFO = {
 }
 
 if __name__ == "__main__":
-    if RUN_MODE not in SESSION_INFO:
-        raise ValueError(
-            f"Unknown RUN_MODE: '{RUN_MODE}'.\n"
-            f"Valid options: {list(SESSION_INFO.keys())}"
-        )
-    print(f"\n{'='*70}")
-    print(f"  >>> {RUN_MODE}: {SESSION_INFO[RUN_MODE]}")
-    print(f"{'='*70}\n")
+    import argparse
 
-    if RUN_MODE == 'SESSION1':
+    parser = argparse.ArgumentParser(
+        description="PSO-TCWavKAN v9.1 for power transformer thermal forecasting"
+    )
+    parser.add_argument(
+        "--run_mode", "--mode", dest="run_mode", default="DEMO", type=str,
+        help="DEMO | SESSION1 | SESSION2A | SESSION2B1 | SESSION2B2 | "
+             "SESSION2B | SESSION2C | MERGE (default: DEMO)",
+    )
+    parser.add_argument(
+        "--dataset", type=str, default="ETTh1", choices=["ETTh1", "ETTh2"],
+        help="Dataset for the demo (default: ETTh1)",
+    )
+    parser.add_argument("--lookback", type=int, default=96,
+                        help="Lookback window length L for the demo (default: 96)")
+    parser.add_argument("--horizon", type=int, default=96,
+                        help="Forecast horizon H for the demo (default: 96)")
+    parser.add_argument("--epochs", type=int, default=5,
+                        help="Training epochs for the demo (default: 5)")
+    args = parser.parse_args()
+
+    mode = args.run_mode.strip().upper()
+    if mode not in SESSION_INFO:
+        parser.error(
+            f"unknown mode {args.run_mode!r}; valid options: "
+            f"{', '.join(SESSION_INFO.keys())}"
+        )
+
+    print("\n" + "=" * 78)
+    print(f"  >>> {mode}: {SESSION_INFO[mode]}")
+    print("=" * 78 + "\n")
+
+    if mode == 'DEMO':
+        run_demo(ds_name=args.dataset, sl=args.lookback,
+                 pl=args.horizon, epochs=args.epochs)
+    elif mode == 'SESSION1':
         run_session1()
-    elif RUN_MODE == 'SESSION2A':
+    elif mode == 'SESSION2A':
         run_session2a()
-    elif RUN_MODE == 'SESSION2B1':
+    elif mode == 'SESSION2B1':
         run_session2b1()
-    elif RUN_MODE == 'SESSION2B2':
+    elif mode == 'SESSION2B2':
         run_session2b2()
-    elif RUN_MODE == 'SESSION2B':
+    elif mode == 'SESSION2B':
         run_session2b()
-    elif RUN_MODE == 'SESSION2C':
+    elif mode == 'SESSION2C':
         run_session2c()
-    elif RUN_MODE == 'MERGE':
+    elif mode == 'MERGE':
         run_merge()

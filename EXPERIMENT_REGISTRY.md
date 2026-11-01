@@ -1,7 +1,11 @@
 # KAN-HPO Experiment Evidence Registry
 
-**Frozen through:** 2026-10-28 K11 v9.1 multi-seed benchmark campaign  
-**Total experiment records:** 908 (380 K01–K10 records + 288 K11 benchmark evaluations + 240 K11 ablation evaluations)
+**Frozen through:** 2026-10-30 K11 v9.1 reviewer-response release  
+**Total experiment records:** 860 (380 K01-K10 records + 288 K11 benchmark evaluations + 192 K11 A1-A4 ablation evaluations)
+
+**Scope note.** Sections K01-K10 document predecessor KAN/KAN-WOA campaigns and
+are retained as historical evidence. They are not PSO-TCWavKAN v9.1 results.
+The v9.1 claims are confined to the K11 section at the end of this file.
 
 K10 v2 completed all 120 registered tasks and passed the dedicated artifact
 audit. V1 was stopped after its log revealed an implementation-only 360-task
@@ -118,22 +122,28 @@ K10 v2 is governed by the original preregistration plus
 passed `audit_k10.py`; all derived tables and figures come from that ZIP.
 
 
-## Campaign K11: PSO-TCWavKAN v9.1 Main Benchmark Campaign (2026-10-25)
+## Campaign K11: PSO-TCWavKAN v9.1 Main Benchmark Campaign (2026-10-30)
 
 - **Campaign ID:** K11_v91_BENCHMARK_FINAL
-- **Preregistration & Protocol:** Canonical 70/10/20 chronological split across 17,420 total hourly observations per dataset (12,194 training / 1,742 validation / 3,484 testing steps on both ETTh1 and ETTh2) from the standard ETT benchmark (https://github.com/zhouhaoyi/ETDataset).
-- **Code Artifact:** `pso_tcwavkan_v91.py` (authoritative release code, platform-independent PyTorch 2.0+, available at https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting/blob/main/pso_tcwavkan_v91.py).
-- **Execution Platform:** Kaggle Cloud GPU (NVIDIA Tesla T4 GPU accelerator, 16 GB VRAM) executing modular sessions: `SESSION1` (Main Benchmark), `SESSION2A` (PatchTST Lite), `SESSION2B1/B2/C` (Ablations A1–A5), `SESSION3` (Noise Perturbation Stress Testing).
-- **Random Seed Protocol:**
-  - Proposed model (PSO-TCWavKAN), DLinear, NLinear: evaluated across **5 independent seeds**: `{1000, 2000, 3000, 4000, 5000}`.
-  - PatchTST Lite: evaluated across **3 independent seeds**: `{1000, 2000, 3000}`.
-  - Total primary benchmark evaluations: 16 configs × 4 models × multi-seed = 288 evaluations.
-- **Ablation Campaign:** 5 structural variants (A1: NoHarmonicBank, A2: NoMultiKernelDecomp, A3: NoNeuralRouter, A4: NoCLPSO, A5: Full PSO-TCWavKAN) × 16 lookback–horizon configurations × 3 independent seeds = 240 evaluations.
-- **Noise Robustness Campaign:** Controlled zero-mean Gaussian perturbation $\sigma \in \{0.0, 0.1, 0.2, 0.3\}$ across 4 representative configurations on reference checkpoint (Seed 1000).
-- **Model Checkpoint Selection:** $\Theta^* = rg\min_{\Theta \in \{\Theta_{	ext{best}}, \Theta_{	ext{SWA}}\}} 	ext{Val\_Loss}(\Theta)$.
-- **Authoritative CSV Artifacts:**
-  - `TABLE1_BENCHMARK_FINAL.csv`: 5-seed aggregated benchmark performance with exact means, standard deviations, and individual seed outputs.
-  - `TABLE2_ABLATION_FINAL.csv`: 3-seed aggregated ablation study across standard ($H \le 336$) and extended ($H = 720$) regimes.
-  - `TABLE5_NOISE_ROBUSTNESS_FINAL.csv`: Multi-level noise degradation trajectory.
-
-- **Release Commit Hash:** `564c881b98de86ac6e6ecae16e33840209a7ac23` (tagged as v9.1 official journal submission release).
+- **Protocol:** canonical chronological 70/10/20 split of the standard ETT data (12,194 training / 1,742 validation / 3,484 test steps per dataset), univariate OT target, scaler fitted on training rows only.
+- **Code artifact:** pso_tcwavkan_v91.py (v9.1, PyTorch 2.0+). The v9.1 code was frozen for the journal release; it is not the same artifact as the KAN_WOA predecessor scripts used in K01-K10.
+- **Execution platform:** Kaggle Cloud GPU (NVIDIA Tesla T4, 16 GB VRAM), modular sessions.
+- **Runtime modes:** SESSION1 (DLinear, NLinear, PSO-TCWavKAN, noise diagnostic, Wilcoxon, bootstrap CI), SESSION2A (PatchTST Lite), SESSION2B1/B2/C (A1-A4), MERGE. The noise diagnostic runs inside SESSION1; there is no separate noise-only session. DEMO is a smoke test excluded from all paper results.
+- **Benchmark seeds:**
+  - PSO-TCWavKAN, DLinear, NLinear: 5 seeds {1000, 2000, 3000, 4000, 5000}.
+  - PatchTST Lite: 3 seeds {1000, 2000, 3000}.
+  - Total benchmark evaluations: 16 configs x (3 models x 5 seeds + 1 model x 3 seeds) = 288.
+- **Ablation campaign:** A1 NoHarmonicBank, A2 NoMultiKernelDecomp, A3 NoNeuralRouter, and A4 NoCLPSO, each on 16 configurations x 3 seeds = 192 training runs. A5_Full is not a separate three-seed ablation run: it is the five-seed benchmark PSO-TCWavKAN mean from TABLE1_BENCHMARK_FINAL.csv. The A5 row in TABLE2_ABLATION_FINAL.csv is therefore benchmark-referenced; its seed columns 1000-3000 are copied from the benchmark CSV and its mean includes seeds 4000 and 5000.
+- **Noise diagnostic:** zero-mean Gaussian perturbations sigma in {0.0, 0.1, 0.2, 0.3} on four representative configurations. This is an exploratory mixed-source, single-checkpoint diagnostic:
+  - ETTh1 (96,96), ETTh1 (336,720), ETTh2 (96,192): clean sigma=0.0 entries are the five-seed benchmark means 0.1127, 0.1817, 0.3312, not Seed 1000 checkpoint values.
+  - ETTh2 (336,336): all entries, including clean 0.3426, come from the pre-SWA Seed 1000 checkpoint.
+  - Noise columns are single-checkpoint observations; per-seed noise trajectories are not archived. The table reports raw MSE only; no within-checkpoint degradation ratio or multi-seed robustness claim is made.
+- **Checkpoint selection:** Theta* = argmin over {Theta_best, Theta_SWA} of validation loss.
+- **Statistical tests:** two-sided Wilcoxon signed-rank across 16 paired conditions. Full precision: vs NLinear W=28.0, p=0.0386, Holm p=0.1159; vs DLinear W=46.0, p=0.2744; vs PatchTST Lite W=35.0, p=0.0934. Rounded Table 4 values: vs NLinear W=29.0, p=0.0443, Holm p=0.1329. None is significant at alpha=0.05 after Holm correction.
+- **Optimizer protocol:** CLPSO with 5 particles x 5 generations = exactly 25 surrogate evaluations; generation 1 evaluates the initial population and is not double-counted. The searched scale variable is raw q = log_scale in [-2.5, 0.0]; the model uses s = softplus(q) + 1e-4. PatchTST Lite uses patch length 16 and stride 8 for both lookbacks.
+- **Authoritative CSV artifacts:**
+  - TABLE1_BENCHMARK_FINAL.csv: 16-config benchmark, 64 model-config rows, per-seed values, sample SD (ddof=1).
+  - TABLE2_ABLATION_FINAL.csv: 80-cell ablation matrix; A1-A4 three seeds, A5 benchmark-referenced.
+  - TABLE5_NOISE_ROBUSTNESS_FINAL.csv: mixed-source noise diagnostic.
+- **Release commit:** 2f8cbeae5112e073e6fee6a44a02d90982f40d8 (main branch at packaging; the reviewer-response edits are in the working tree). An earlier pre-review hash cited in the previous registry is superseded and was never tagged.
+- **Not archived:** per-seed raw training logs, model checkpoints, per-seed noise trajectories, and Table 7 profiling logs. Table 7 timing, latency, and memory values are original-run observations, not independently reproduced.
