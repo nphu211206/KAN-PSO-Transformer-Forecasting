@@ -145,5 +145,5 @@ passed `audit_k10.py`; all derived tables and figures come from that ZIP.
   - TABLE1_BENCHMARK_FINAL.csv: 16-config benchmark, 64 model-config rows, per-seed values, sample SD (ddof=1).
   - TABLE2_ABLATION_FINAL.csv: 80-cell ablation matrix; A1-A4 three seeds, A5 benchmark-referenced.
   - TABLE5_NOISE_ROBUSTNESS_FINAL.csv: mixed-source noise diagnostic.
-- **Release commit:** 2f8cbeae5112e073e6fee6a44a02d90982f40d8 (main branch at packaging; the reviewer-response edits are in the working tree). An earlier pre-review hash cited in the previous registry is superseded and was never tagged.
+- **Release commit:** c473e974b145853a779cf7f339dd7ebbda3e0a94 (main branch; this content commit contains the reviewer-response release). An earlier pre-review hash cited in the previous registry is superseded and was never tagged.
 - **Not archived:** per-seed raw training logs, model checkpoints, per-seed noise trajectories, and Table 7 profiling logs. Table 7 timing, latency, and memory values are original-run observations, not independently reproduced.

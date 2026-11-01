@@ -32,7 +32,7 @@
 - [x] Sync `paper_v91_FINAL.*`, `paper_submission.*`, cover letter, declarations, `paper_v91_FINAL.md`, and Fig. 8 between the root and `github_release`; hashes match.
 - [x] Regenerate cover-letter and declarations DOCX/PDF from the corrected Markdown and sync to the release package.
 - [x] Confirm the cover-letter date with the author: November 1, 2026.
-- [ ] Authorize and create the release commit/push, then update `REPRODUCIBILITY.md` with the base commit hash.
+- [x] Authorize and create the release commit (`c473e97`) and update `REPRODUCIBILITY.md` / `EXPERIMENT_REGISTRY.md` with the base commit hash.
 
 ## Statistics and data provenance
 
@@ -49,7 +49,7 @@
 - [x] Verify `python pso_tcwavkan_v91.py --help` and `py_compile`.
 - [x] Add `reproduce_statistical_tests.py` and verify both rounded and full-precision blocks against `results/TABLE1_BENCHMARK_FINAL.csv`.
 - [x] Update `README.md`, `REPRODUCIBILITY.md`, `EXPERIMENT_REGISTRY.md`, and `CLAIM_EVIDENCE_MATRIX.md` to the corrected claims.
-- [ ] Add the final repository URL, commit hash, and Zenodo DOI after the release commit is created.
+- [x] Add the final repository URL and commit hash; [ ] add the Zenodo DOI after the DOI-bearing archive is deposited.
 - [ ] Confirm `LICENSE`, third-party notices, and ETT redistribution terms before publishing the DOI-bearing archive.
 - [x] Restore the tracked `__pycache__/pso_tcwavkan_v91.cpython-313.pyc` and remove untracked pycache files.
 

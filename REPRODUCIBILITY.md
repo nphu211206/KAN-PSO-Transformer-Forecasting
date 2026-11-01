@@ -7,7 +7,7 @@ This package contains the code, benchmark CSV matrices, statistical reproduction
 - **Author:** Nguyen Phu Toan (nphu211206@gmail.com)
 - **Repository:** https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting
 - **Release version:** v9.1
-- **Base commit:** `f2f8cbeae5112e073e6fee6a44a02d90982f40d8` (the reviewer-response edits are included in the working tree)
+- **Base commit:** `c473e974b145853a779cf7f339dd7ebbda3e0a94` (release content commit; this documentation update follows it)
 - **License:** MIT
 
 ---
