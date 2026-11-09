@@ -174,7 +174,12 @@ def make_surrogate_loader(name, sl, pl, bs=32, frac=0.15, seed=42):
 # ═══════════════════════════════════════════════════════════════════════════════
 
 class RevIN(nn.Module):
-    """Reversible Instance Normalization [Kim et al., ICLR 2022]."""
+    r"""
+    Reversible Instance Normalization [Kim et al., ICLR 2022].
+    Forward normalization (Eqs. 1-3): \tilde{x} = \gamma \odot ((x - \mu) / \sigma) + \beta
+    Inverse denormalization (Eq. 3b): \hat{y} = ((\tilde{y} - \beta) / (\gamma + \epsilon)) \odot \sigma + \mu
+    Learnable affine parameters \gamma (init 1.0) and \beta (init 0.0).
+    """
     def __init__(self, num_features=1, eps=1e-5, affine=True):
         super().__init__()
         self.eps = eps
@@ -229,7 +234,12 @@ class DropKAN(nn.Module):
 
 
 class InterPatchKAN(nn.Module):
-    """Inter-Patch KAN Mixing with learnable residual gate."""
+    """
+    Inter-Patch KAN Mixing with learnable residual gate.
+    Computes token mixing across patches via nn.Linear(n_patches, n_patches, bias=False)
+    applied channel-wise: O(D * N^2) MACs per sample.
+    Gate initialized to -2.0 (sigmoid(-2.0) ~= 0.1192).
+    """
     def __init__(self, n_patches, d_model, drop=0.05):
         super().__init__()
         self.ln   = nn.LayerNorm(d_model)
@@ -279,6 +289,17 @@ class SingleFreqWaveletBank(nn.Module):
 
 
 class TCWavKANBlock_v91(nn.Module):
+    """
+    Temporal Convolutional Wavelet KAN Block (Section 3.3).
+    - Local context: DWConv1d(kernel_size=5, padding=2)
+    - 2D Wavelet parameters: center mu in R^{d x K}, scale ls in R^{d x K}, base c_s in R^{d x K}
+    - Multiscale patch localization: PosEmbed(np_+2, 16) -> CoeffMLP(16->32->K)
+    - Dilation: s = softplus(ls) + 1e-4
+    - Activation: HarmonicMorletWaveletBank(K=5) + DropKAN(0.05)
+    - Wavelet gate: sigma(gate_wav), gate_wav init -3.0
+    - Parallel InterPatch mixing: InterPatchKAN (residual gate init -2.0)
+    - Residual projection: proj = Linear(d, d) + LayerNorm(d)
+    """
     def __init__(self, d, np_, K=5, drop=0.05,
                  omega0=5.0, log_scale=-1.0, use_harmonic_bank=True):
         super().__init__()
@@ -350,7 +371,7 @@ class AdaptiveDualFFTHead(nn.Module):
         xf_r = torch.sign(xf.real) * F.relu(xf.real.abs() - thr.detach())
         xf_i = torch.sign(xf.imag) * F.relu(xf.imag.abs() - thr.detach())
         yf = self.fh(torch.cat([xf_r, xf_i], dim=-1))
-        w_sum = self.wt.abs() + self.wf.abs() + 1e-6
+        w_sum = self.wt.abs() + self.wf.abs() + 1e-6  # epsilon = 1e-6 (synchronized with Section 3.3 Eq. 11)
         return (self.wt.abs() * yt + self.wf.abs() * yf) / w_sum
 
 
@@ -369,13 +390,16 @@ class InstanceAdaptiveRouter(nn.Module):
 
 
 class Decomp_TCWavKAN_v91(nn.Module):
-    """
+    r"""
     PSO-TCWavKAN v9.1 — Full model with ablation control flags.
 
-    Mathematical guarantee (Proposition 1):
-      When g(x) -> 0: output = y_trend + y_seas_lin = EXACTLY the multi-kernel
-      linear baseline (canonical DLinear when K1 = K2 = 25)
-      Proposition 1 (Asymptotic Linear Structural Recovery): As the neural routing gate g(x) -> 0, the architecture recovers the generalized linear projection in the topological closure of the hypothesis space.
+    Mathematical guarantee (Theorem 1):
+      Theorem 1 (Asymptotic Linear Subspace Containment and Universal Representation):
+      As the neural routing gate g(x) -> 0 under the compact-open topology, the architecture
+      recovers the generalized RevIN multi-kernel linear projection in the topological
+      closure: H_{RevIN-Lin}^{(K1, K2)} \subset \bar{H}_{PSO-TCWavKAN}.
+      When K1 = K2 = 25, canonical single-kernel RevIN-DLinear is recovered identically.
+      Inductive error attenuation dynamic: \Delta b_{2, h} \propto -(\hat{y}_h - y_h)(y_{seas\_kan, h} - y_{seas\_lin, h}).
 
     Ablation flags:
       use_harmonic_bank : True=K=5 octave bank (default); False=K=1 single freq
