@@ -16,25 +16,22 @@ Email: `nphu211206@gmail.com` | ORCID: `0009-0005-0529-2131`
 ### Declarations
 
 #### 1. Funding
-This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.
+This research received no external funding from agencies in the public, commercial, or not-for-profit sectors.
 
 #### 2. Competing Interests
-The authors declare that they have no competing financial or non-financial interests that are directly or indirectly related to the work submitted for publication.
+The author declares no competing financial or non-financial interests related to this manuscript.
 
-#### 3. Ethics Approval
-Not applicable. This manuscript does not contain any studies with human participants or vertebrate animals performed by any of the authors.
+#### 3. Ethics Approval and Consent to Participate
+Not applicable. This study does not involve human participants, human data, human tissue, or vertebrate animals.
 
-#### 4. Consent to Participate
-Not applicable. This study does not involve human participants, human data, or human tissue.
-
-#### 5. Consent for Publication
+#### 4. Consent for Publication
 Not applicable. This manuscript does not contain any individual person's data, personal identifiers, or personal images in any form.
 
-#### 6. Availability of Data and Materials
-The empirical benchmark datasets analyzed during the current study are publicly available in the Electricity Transformer Temperature (ETT) repository hosted at https://github.com/zhouhaoyi/ETDataset. The processed telemetry partitions for ETTh1 and ETTh2 follow the standardized benchmark protocols established in the literature.
+#### 5. Availability of Data and Materials
+All benchmark telemetry datasets analyzed in this study are publicly accessible in the Electricity Transformer Temperature (ETT) repository hosted at `https://github.com/zhouhaoyi/ETDataset`. The processed `ETTh1` and `ETTh2` partitions follow the canonical 12/4/4-month LTSF split protocol.
 
-#### 7. Code Availability
-The complete PyTorch source code, CLPSO optimization routines, model configuration files, and pre-trained checkpoints supporting the findings of this study are openly available in a public GitHub repository at https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting and permanently archived via Zenodo with persistent DOI https://doi.org/10.5281/zenodo.xxxxxxx.
+#### 6. Code Availability
+Complete PyTorch training pipelines, dual-GPU Kaggle verification scripts, 600 DPI figure generation scripts, CSV experimental tables, and 144 NPZ prediction/ground-truth arrays are openly hosted at `https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting` and preserved for permanent archival at Zenodo (`https://doi.org/10.5281/zenodo.xxxxxxx`).
 
-#### 8. Authors' Contributions
-Phu Toan Nguyen: Conceptualization, Methodology, Mathematical Formulation, Software, Formal Analysis, Investigation, Data Curation, Validation, Visualization, Writing – Original Draft, Writing – Review & Editing, Project Administration.
+#### 7. Author Contributions
+Phu Toan Nguyen (ORCID: 0009-0005-0529-2131): Conceptualization, Methodology, Formal Proofs, Software Implementation, Statistical Analysis, Visualization, Writing – Original Draft, Writing – Review & Editing.

@@ -1,0 +1,13 @@
+model,lookback,horizon,batch_size_train,total_params,trainable_params,peak_train_vram_mb,peak_infer_vram_b1_mb,infer_latency_b1_ms_mean,infer_latency_b1_ms_std,device_name,torch_version
+tcwavkan_master,96,96,128,49841,49841,34.763,0.05,3.6146,0.1474,Tesla T4,2.11.0+cu130
+tcwavkan_master,336,720,32,800705,800705,16.041,0.122,3.8846,0.2951,Tesla T4,2.11.0+cu130
+tcwavkan_no_pso,96,96,128,49841,49841,17.513,0.047,3.9399,0.758,Tesla T4,2.11.0+cu130
+tcwavkan_no_pso,336,720,32,800705,800705,16.041,0.122,3.819,0.2362,Tesla T4,2.11.0+cu130
+dlinear,96,96,128,18624,18624,0.497,0.0,0.1991,0.0327,Tesla T4,2.11.0+cu130
+dlinear,336,720,32,485280,485280,9.475,0.011,0.1845,0.0248,Tesla T4,2.11.0+cu130
+nlinear,96,96,128,9312,9312,0.319,0.0,0.1205,0.0168,Tesla T4,2.11.0+cu130
+nlinear,336,720,32,242640,242640,4.846,0.005,0.1178,0.0139,Tesla T4,2.11.0+cu130
+patchtst_lite,96,96,128,169442,169442,15.778,0.024,1.1311,0.0625,Tesla T4,2.11.0+cu130
+patchtst_lite,336,720,32,1993682,1993682,38.269,0.093,1.1663,0.0606,Tesla T4,2.11.0+cu130
+bspline_kan,96,96,128,55298,55298,5.482,0.022,2.0484,0.1977,Tesla T4,2.11.0+cu130
+bspline_kan,336,720,32,304130,304130,6.395,0.082,1.9973,0.0954,Tesla T4,2.11.0+cu130

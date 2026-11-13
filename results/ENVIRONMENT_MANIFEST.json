@@ -1,0 +1,27 @@
+{
+  "torch_version": "2.11.0+cu130",
+  "python_version": "3.13.16",
+  "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+  "cuda_available": true,
+  "gpu_count": 2,
+  "device_name": "Tesla T4",
+  "protocol": "canonical_12_4_4",
+  "channels": "univariate_OT_C1",
+  "seeds": [
+    2024,
+    2025,
+    2026
+  ],
+  "clpso_leakage_free_train_cap": 8640,
+  "prop1_max_abs_diff": {
+    "L96_H96": 0.0,
+    "L336_H720": 0.0
+  },
+  "total_elapsed_sec": 9124.03,
+  "dual_gpu_parallel": true,
+  "sharded_execution": true,
+  "per_shard_elapsed_sec": {
+    "shard_0": 7737.58,
+    "shard_1": 9122.56
+  }
+}
