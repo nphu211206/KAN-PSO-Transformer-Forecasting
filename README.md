@@ -112,7 +112,7 @@ python KAGGLE_NCAA_OPTION_A_SUPPLEMENT.py --mode FULL_OPTION_A
 ## Data Availability & Citation
 
 - **Benchmark Datasets:** Public ETT datasets (`ETTh1.csv`, `ETTh2.csv`) at [zhouhaoyi/ETDataset](https://github.com/zhouhaoyi/ETDataset).
-- **Archival DOI:** Pending Zenodo release webhook (`https://doi.org/10.5281/zenodo.xxxxxxx`). See [ZENODO_RELEASE_GUIDE.md](ZENODO_RELEASE_GUIDE.md).
+- **Archival DOI:** Pending Zenodo release webhook (`https://doi.org/10.5281/zenodo.24200012`). See [ZENODO_RELEASE_GUIDE.md](ZENODO_RELEASE_GUIDE.md).
 
 ```bibtex
 @article{nguyen2026psotcwavkan,

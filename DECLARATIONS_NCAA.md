@@ -31,7 +31,7 @@ Not applicable. This manuscript does not contain any individual person's data, p
 All benchmark telemetry datasets analyzed in this study are publicly accessible in the Electricity Transformer Temperature (ETT) repository hosted at `https://github.com/zhouhaoyi/ETDataset`. The processed `ETTh1` and `ETTh2` partitions follow the canonical 12/4/4-month LTSF split protocol.
 
 #### 6. Code Availability
-Complete PyTorch training pipelines, dual-GPU Kaggle verification scripts, 600 DPI figure generation scripts, CSV experimental tables, and 144 NPZ prediction/ground-truth arrays are openly hosted at `https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting` and preserved for permanent archival at Zenodo (`https://doi.org/10.5281/zenodo.xxxxxxx`).
+Complete PyTorch training pipelines, dual-GPU Kaggle verification scripts, 600 DPI figure generation scripts, CSV experimental tables, and 144 NPZ prediction/ground-truth arrays are openly hosted at `https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting` and preserved for permanent archival at Zenodo (`https://doi.org/10.5281/zenodo.24200012`).
 
 #### 7. Author Contributions
 Phu Toan Nguyen (ORCID: 0009-0005-0529-2131): Conceptualization, Methodology, Formal Proofs, Software Implementation, Statistical Analysis, Visualization, Writing – Original Draft, Writing – Review & Editing.

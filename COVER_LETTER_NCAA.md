@@ -53,7 +53,7 @@ All six model families (`PSO-TCWavKAN Master`, `DLinear`, `NLinear`, `PatchTST L
 
 - **Originality:** This manuscript is completely original, has not been published previously, and is not under consideration elsewhere.
 - **Publication Route (0-APC Traditional Subscription Model):** In accordance with Springer Nature hybrid journal policies, this manuscript is submitted under the **Traditional Subscription Model (0-APC Free Publishing, zero author-facing processing charges)**.
-- **Ethical Compliance & Full Reproducibility:** All mandatory Springer Nature declarations are included in both the manuscript and standalone Declarations file. The complete PyTorch training code, dual-GPU experiment coordinator, 600 DPI figure scripts, CSV logs, and 144 NPZ prediction/ground-truth arrays are openly hosted at `https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting` (and slated for Zenodo archival at `https://doi.org/10.5281/zenodo.xxxxxxx`).
+- **Ethical Compliance & Full Reproducibility:** All mandatory Springer Nature declarations are included in both the manuscript and standalone Declarations file. The complete PyTorch training code, dual-GPU experiment coordinator, 600 DPI figure scripts, CSV logs, and 144 NPZ prediction/ground-truth arrays are openly hosted at `https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting` (and slated for Zenodo archival at `https://doi.org/10.5281/zenodo.24200012`).
 
 Thank you very much for your time, consideration, and editorial stewardship of our submission.
 

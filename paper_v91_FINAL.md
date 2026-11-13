@@ -380,7 +380,7 @@ Future work will integrate physics-informed differential thermal residual penalt
 - **Ethics Approval and Consent to Participate:** Not applicable. This study does not involve human participants or animals.
 - **Consent for Publication:** Not applicable. This manuscript contains no individual personal data.
 - **Availability of Data and Materials:** All benchmark telemetry datasets analyzed in this study are publicly accessible in the Electricity Transformer Temperature (ETT) repository at https://github.com/zhouhaoyi/ETDataset.
-- **Code Availability:** Complete PyTorch training pipelines, Kaggle dual-GPU verification scripts, 600 DPI figure scripts, and CSV/NPZ experimental logs are openly hosted at https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting and preserved for permanent archival at Zenodo (https://doi.org/10.5281/zenodo.xxxxxxx).
+- **Code Availability:** Complete PyTorch training pipelines, Kaggle dual-GPU verification scripts, 600 DPI figure scripts, and CSV/NPZ experimental logs are openly hosted at https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting and preserved for permanent archival at Zenodo (https://doi.org/10.5281/zenodo.24200012).
 - **Author Contributions:** Phu Toan Nguyen (ORCID: 0009-0005-0529-2131): Conceptualization, Methodology, Formal Proofs, Software Implementation, Statistical Analysis, Visualization, Writing – Original Draft, Writing – Review & Editing.
 
 ---

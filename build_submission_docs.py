@@ -198,7 +198,7 @@ def create_cover_letter():
         ("Reproducibility: ",
          "Source code, dual-GPU verification scripts, 600 DPI figure scripts, CSV logs, and all 144 NPZ prediction/ground-truth "
          "arrays are openly available at https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting and archived via "
-         "Zenodo (https://doi.org/10.5281/zenodo.xxxxxxx)."),
+         "Zenodo (https://doi.org/10.5281/zenodo.24200012)."),
     ]
     for m_title, m_desc in mand:
         pm = doc.add_paragraph(style="List Bullet")
@@ -280,7 +280,7 @@ def create_declarations():
          "Complete PyTorch training pipelines, dual-GPU Kaggle verification scripts, 600 DPI figure generation scripts, "
          "CSV experimental tables, and 144 NPZ prediction/ground-truth arrays are openly hosted at "
          "https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting and preserved for permanent archival at "
-         "Zenodo (https://doi.org/10.5281/zenodo.xxxxxxx)."),
+         "Zenodo (https://doi.org/10.5281/zenodo.24200012)."),
         ("Author Contributions",
          "Phu Toan Nguyen (ORCID: 0009-0005-0529-2131): Conceptualization, Methodology, Formal Proofs, Software Implementation, "
          "Statistical Analysis, Visualization, Writing \u2013 Original Draft, Writing \u2013 Review & Editing."),

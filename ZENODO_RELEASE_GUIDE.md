@@ -5,7 +5,7 @@
 **Author:** Phu Toan Nguyen  
 **ORCID iD:** [0009-0005-0529-2131](https://orcid.org/0009-0005-0529-2131)  
 **GitHub Repository:** [https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting](https://github.com/nphu211206/KAN-PSO-Transformer-Forecasting)  
-**Permanent Archival DOI Placeholder:** `10.5281/zenodo.xxxxxxx`
+**Permanent Archival DOI Placeholder:** `10.5281/zenodo.24200012`
 
 ---
 
@@ -30,7 +30,7 @@
 ## 2. Final DOI Synchronization in Manuscript & Docs
 
 Upon receiving the real numeric Zenodo ID (e.g., `10.5281/zenodo.14892015`):
-1. Replace `zenodo.xxxxxxx` across `paper_ncaa.tex`, `paper_v91_FINAL.md`, `COVER_LETTER_NCAA.md`, `DECLARATIONS_NCAA.md`, `build_submission_docs.py`, and `README.md`.
+1. Replace `10.5281/zenodo.24200012` across `paper_ncaa.tex`, `paper_v91_FINAL.md`, `COVER_LETTER_NCAA.md`, `DECLARATIONS_NCAA.md`, `build_submission_docs.py`, and `README.md`.
 2. Re-run:
    ```bash
    python generate_paper_v91_docx.py

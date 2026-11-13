@@ -34,5 +34,5 @@
 - [x] **LaTeX & BibTeX Hygiene:** `ingest_kaggle_results.py --verify_only` and `verify_latex_package.py` pass with 0 errors (`76/76` bijective keys).
 - [x] **Automated Statistical & Tensor Tests:** `pytest tests/test_challenger_m6_benchmarks.py` (`7/7` passed across all 144 NPZs and Wilcoxon–Holm exact tests).
 - [x] **Visual QA:** All 6 figures (600 DPI) and LibreOffice-rendered PDF pages of `paper_v91_FINAL.docx`, `COVER_LETTER_NCAA.docx`, and `DECLARATIONS_NCAA.docx` inspected for zero text clipping, overlaps, orphan signatures, or raw LaTeX leaks.
-- [ ] **GitHub Push & Zenodo Tag (`v1.0.0`):** Push `github_release/` to `KAN-PSO-Transformer-Forecasting` and mint live Zenodo DOI replacing `zenodo.xxxxxxx`.
+- [ ] **GitHub Push & Zenodo Tag (`v1.0.0`):** Push `github_release/` to `KAN-PSO-Transformer-Forecasting` and mint live Zenodo DOI replacing `10.5281/zenodo.24200012`.
 - [ ] **Overleaf Compile Check:** Quick compile check inside Springer Nature `sn-jnl` template prior to final Editorial Manager PDF sign-off.
